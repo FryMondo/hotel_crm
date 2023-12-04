@@ -2,6 +2,7 @@ const express = require('express');
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
 
 const app = express();
 const port = 3000;
@@ -25,22 +26,29 @@ db.connect((err) => {
     console.log('Connected to MySQL database');
 });
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
     const { email, username, password } = req.body;
 
-    const sql = 'INSERT INTO users (email, username, password) VALUES (?, ?, ?)';
-    const values = [email, username, password];
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    db.query(sql, values, (err, result) => {
-        if (err) {
-            console.log('Error executing query:', err);
-            res.status(500).send('Error registering user');
-            return;
-        }
+        const sql = 'INSERT INTO users (email, username, password) VALUES (?, ?, ?)';
+        const values = [email, username, hashedPassword];
 
-        console.log('User registered successfully');
-        res.status(200).send('User registered successfully');
-    });
+        db.query(sql, values, (err, result) => {
+            if (err) {
+                console.log('Error executing query:', err);
+                res.status(500).send('Error registering user');
+                return;
+            }
+
+            console.log('User registered successfully');
+            res.status(200).send('User registered successfully');
+        });
+    } catch (error) {
+        console.log('Error hashing password:', error);
+        res.status(500).send('Error registering user');
+    }
 });
 
 app.listen(port, () => {
