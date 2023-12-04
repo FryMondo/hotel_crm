@@ -53,10 +53,8 @@ export default {
         });
 
         if (response.ok) {
-          console.log('User registered successfully');
           this.$router.push('/');
         } else {
-          console.error('Error registering user');
         }
       } catch (error) {
         console.error('Error:', error);
