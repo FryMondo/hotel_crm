@@ -53,12 +53,11 @@ app.post('/login', async (req, res) => {
 
     db.query(sql, values, async (err, results) => {
         if (err) {
-            console.log('Error executing query:', err);
             res.status(500).send('Error logging in');
             return;
         }
         if (results.length === 0) {
-            res.json({success: false, message: 'Невірна пошта або пароль'});
+            res.json({success: false, message: '(!) Невірна пошта'});
             return;
         }
 
@@ -67,7 +66,7 @@ app.post('/login', async (req, res) => {
         if (isPasswordValid) {
             res.json({success: true, message: 'Успішний логін'});
         } else {
-            res.json({success: false, message: 'Невірна пошта або пароль'});
+            res.json({success: false, message: '(!) Невірний пароль'});
         }
     });
 });

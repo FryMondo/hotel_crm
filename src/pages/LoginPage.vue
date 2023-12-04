@@ -4,12 +4,14 @@
     <form @submit.prevent="loginUser">
       <h2>Логін</h2>
       <div class="input-box">
-        <input type="email" v-model="form.email">
+        <input v-model="form.email" @input="clearError('email')" type="email">
         <label>Email:</label>
+        <div class="error-message" id="email-error">{{ errors.email }}</div>
       </div>
       <div class="input-box">
-        <input type="password" v-model="form.password">
+        <input v-model="form.password" @input="clearError('password')" type="password">
         <label>Пароль:</label>
+        <div class="error-message" id="password-error">{{ errors.password }}</div>
       </div>
       <button type="submit">Увійти</button>
       <div class="register">
@@ -30,6 +32,7 @@ export default {
         email: '',
         password: '',
       },
+      errors: {},
     };
   },
   methods: {
@@ -37,13 +40,22 @@ export default {
       try {
         const response = await axios.post('http://localhost:3000/login', this.form);
         console.log(response.data);
+
         if (response.data.success) {
           this.$router.push('/');
         } else {
+          if (response.data.message.includes('пошта')) {
+            this.errors.email = response.data.message;
+          } else if (response.data.message.includes('пароль')) {
+            this.errors.password = response.data.message;
+          }
         }
       } catch (error) {
         console.error('Помилка авторизації:', error);
       }
+    },
+    clearError(errorID) {
+      delete this.errors[errorID];
     },
   },
 };
@@ -135,5 +147,13 @@ button {
 
 .register p a:hover {
   text-decoration: underline;
+}
+
+.error-message {
+  color: rgb(255, 0, 0);
+  position: absolute;
+  top: 110%;
+  font-size: 1em;
+  width: 400px;
 }
 </style>
