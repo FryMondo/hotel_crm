@@ -1,19 +1,19 @@
 <template>
   <body>
   <div class="form-box">
-    <form>
+    <form @submit.prevent="loginUser">
       <h2>Логін</h2>
       <div class="input-box">
-        <input type="email">
+        <input type="email" v-model="form.email">
         <label>Email:</label>
       </div>
       <div class="input-box">
-        <input type="password">
+        <input type="password" v-model="form.password">
         <label>Пароль:</label>
       </div>
-      <button @click="$router.push('/')">Увійти</button>
+      <button type="submit">Увійти</button>
       <div class="register">
-        <p>Ще намає акаунта? <strong @click="$router.push('/registration')">Реєстрація</strong></p>
+        <p>Ще немає акаунта? <strong @click="$router.push('/registration')">Реєстрація</strong></p>
       </div>
     </form>
   </div>
@@ -21,7 +21,32 @@
 </template>
 
 <script>
-export default {}
+import axios from "axios";
+
+export default {
+  data() {
+    return {
+      form: {
+        email: '',
+        password: '',
+      },
+    };
+  },
+  methods: {
+    async loginUser() {
+      try {
+        const response = await axios.post('http://localhost:3000/login', this.form);
+        console.log(response.data);
+        if (response.data.success) {
+          this.$router.push('/');
+        } else {
+        }
+      } catch (error) {
+        console.error('Помилка авторизації:', error);
+      }
+    },
+  },
+};
 </script>
 
 <style scoped>

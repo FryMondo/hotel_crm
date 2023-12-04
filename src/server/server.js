@@ -9,7 +9,7 @@ const port = 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -27,11 +27,9 @@ db.connect((err) => {
 });
 
 app.post('/register', async (req, res) => {
-    const { email, username, password } = req.body;
-
+    const {email, username, password} = req.body;
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
-
         const sql = 'INSERT INTO users (email, username, password) VALUES (?, ?, ?)';
         const values = [email, username, hashedPassword];
 
@@ -41,14 +39,37 @@ app.post('/register', async (req, res) => {
                 res.status(500).send('Error registering user');
                 return;
             }
-
-            console.log('User registered successfully');
             res.status(200).send('User registered successfully');
         });
     } catch (error) {
-        console.log('Error hashing password:', error);
         res.status(500).send('Error registering user');
     }
+});
+
+app.post('/login', async (req, res) => {
+    const {email, password} = req.body;
+    const sql = 'SELECT * FROM users WHERE email = ?';
+    const values = [email];
+
+    db.query(sql, values, async (err, results) => {
+        if (err) {
+            console.log('Error executing query:', err);
+            res.status(500).send('Error logging in');
+            return;
+        }
+        if (results.length === 0) {
+            res.json({success: false, message: 'Невірна пошта або пароль'});
+            return;
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, results[0].password);
+
+        if (isPasswordValid) {
+            res.json({success: true, message: 'Успішний логін'});
+        } else {
+            res.json({success: false, message: 'Невірна пошта або пароль'});
+        }
+    });
 });
 
 app.listen(port, () => {
