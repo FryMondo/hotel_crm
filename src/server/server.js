@@ -77,29 +77,24 @@ app.post('/login', async (req, res) => {
 
 app.post('/reservation', async (req, res) => {
     const {roomNumber, numberOfRooms, roomArea, placesInRoom, description, roomType, roomCost} = req.body;
-    const ID = 1;
-
     try {
-        const sqlRoomInfo = 'INSERT INTO roominformation (placesInRoom, roomType, roomCost, ID) VALUES (?, ?, ?, ?)';
-        const roomInformationID = [placesInRoom, roomType, roomCost, ID];
-
-        const sqlRooms = 'INSERT INTO rooms (roomNumber, numberOfRooms, roomArea, description, roomInformationID) VALUES (?, ?, ?, ?, ?)';
-        const RoomsValues = [roomNumber, numberOfRooms, roomArea, description, ID];
-
-        db.query(sqlRoomInfo, roomInformationID, (err, result) => {
+        const sqlRoomInfo = 'INSERT INTO roominformation (placesInRoom, roomType, roomCost) VALUES (?, ?, ?)';
+        const roomInformationValues = [placesInRoom, roomType, roomCost];
+        db.query(sqlRoomInfo, roomInformationValues, (err, result) => {
             if (err) {
                 console.log('Error executing query:', err);
                 res.status(500).send('Error adding info into table roominformation');
                 return;
             }
-
-            db.query(sqlRooms, RoomsValues, (err, result) => {
+            const roomInformationID = result.insertId;
+            const sqlRooms = 'INSERT INTO rooms (roomNumber, numberOfRooms, roomArea, description, roomInformationID) VALUES (?, ?, ?, ?, ?)';
+            const roomsValues = [roomNumber, numberOfRooms, roomArea, description, roomInformationID];
+            db.query(sqlRooms, roomsValues, (err, result) => {
                 if (err) {
                     console.log('Error executing query:', err);
                     res.status(500).send('Error adding info into table rooms');
                     return;
                 }
-
                 res.status(200).send('Successfully added information in roominformation and rooms');
             });
         });
@@ -125,7 +120,6 @@ app.post('/addInfo', async (req, res) => {
     try {
         const sqlUserInfo = 'INSERT INTO userinfo (username, phone, surname, firstName) VALUES (?, ?, ?, ?)';
         const valuesUserInfo = [username, phone, surname, firstName];
-
         db.query(sqlUserInfo, valuesUserInfo, (err, result) => {
             if (err) {
                 console.log('Error executing query:', err);
@@ -141,12 +135,9 @@ app.post('/addInfo', async (req, res) => {
 
 app.post('/reserveRoom', async (req, res) => {
     const {usernameID, startDate, endDate, roomNumberID, numberOfPeople} = req.body;
-    const ID = 1;
-
     try {
-        const sqlReserve = 'INSERT INTO roomreservation (usernameID, startDate, endDate, roomNumberID, numberOfPeople, ID) VALUES (?, ?, ?, ?, ?, ?)';
-        const valuesReserve = [usernameID, startDate, endDate, roomNumberID, numberOfPeople, ID];
-
+        const sqlReserve = 'INSERT INTO roomreservation (usernameID, startDate, endDate, roomNumberID, numberOfPeople) VALUES (?, ?, ?, ?, ?)';
+        const valuesReserve = [usernameID, startDate, endDate, roomNumberID, numberOfPeople];
         db.query(sqlReserve, valuesReserve, (err, result) => {
             if (err) {
                 console.log('Error executing query:', err);
