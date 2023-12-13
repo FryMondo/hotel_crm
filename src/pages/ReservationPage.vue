@@ -12,8 +12,12 @@
         <label>Кінець бронювання:</label>
       </div>
       <div class="input-box">
-        <input v-model="roomNumber" type="number">
         <label>Номер кімнати:</label>
+        <select v-model="selectedRoom" @change="updateNumberOfPeople">
+          <option v-for="room in roomList" :key="room.roomNumber" :value="room.roomNumber">
+            {{ room.roomNumber }}
+          </option>
+        </select>
       </div>
       <div class="input-box">
         <input v-model="numberOfPeople" type="number">
@@ -32,7 +36,9 @@ export default {
       startDate: '',
       endDate: '',
       roomNumber: '',
-      numberOfPeople: ''
+      numberOfPeople: '',
+      selectedRoom: null,
+      roomList: []
     }
   },
   methods: {
@@ -42,7 +48,6 @@ export default {
         if (!username) {
           return;
         }
-
         const responseAddInfo = await fetch('http://localhost:3000/reserveRoom', {
           method: 'POST',
           headers: {
@@ -65,8 +70,29 @@ export default {
       } catch (error) {
         console.error('Error:', error);
       }
-    }
-  }
+    },
+    async fetchData() {
+      try {
+        const response = await fetch('http://localhost:3000/getRooms');
+        if (response.ok) {
+          this.roomList = await response.json();
+        } else {
+          console.error('Server response not OK');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
+    updateNumberOfPeople() {
+      const selectedRoom = this.roomList.find(room => room.roomNumber === this.selectedRoom);
+      if (selectedRoom) {
+        this.numberOfPeople = selectedRoom.placesInRoom;
+      }
+    },
+  },
+  mounted() {
+    this.fetchData();
+  },
 }
 </script>
 
