@@ -4,6 +4,7 @@
       <div class="room-number">
         <label>Номер кімнати: </label>
         <input v-model="roomNumber" type="number">
+        <div class="error-message" v-if="roomNumberError">{{ roomNumberError }}</div>
       </div>
       <div class="rooms">
         <label>Кількість кімнат: </label>
@@ -12,7 +13,6 @@
       <div class="area">
         <label>Площа кімнати: </label>
         <input v-model="roomArea" type="number">
-        <label> м^3</label>
       </div>
       <div class="places">
         <label>Кількість місць в номері: </label>
@@ -72,7 +72,8 @@ export default {
       description: '',
       roomType: '',
       roomCost: '',
-      rooms: []
+      rooms: [],
+      roomNumberError: ''
     }
   },
   methods: {
@@ -93,6 +94,11 @@ export default {
             roomCost: this.roomCost
           }),
         });
+        const isRoomNumberExists = this.rooms.some(room => room.roomNumber === this.roomNumber);
+        if (isRoomNumberExists) {
+          this.roomNumberError = '(!) Такий номер вже існує';
+          return;
+        }
         await this.fetchData();
       } catch (error) {
         console.error('Error:', error);
