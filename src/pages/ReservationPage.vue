@@ -91,7 +91,8 @@ export default {
     updateNumberOfPeople() {
       const selectedRoom = this.roomList.find(room => room.roomNumber === this.selectedRoom);
       if (selectedRoom) {
-        this.peopleCountOptions = Array.from({ length: selectedRoom.placesInRoom }, (_, index) => index + 1);
+        this.peopleCountOptions = Array.from({ length: selectedRoom.placesInRoom },
+            (_, index) => index + 1);
         this.numberOfPeople = 1;
       }
     },
