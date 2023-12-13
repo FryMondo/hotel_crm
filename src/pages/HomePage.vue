@@ -19,7 +19,7 @@
       <div class="navigation-menu">
         <button><strong>Заброньовані номери</strong></button>
         <hr>
-        <button><strong>Додати інформацію</strong></button>
+        <button @click="$router.push('/additional')"><strong>Додати інформацію</strong></button>
         <hr>
         <button @click="$router.push('/login')"><strong>Вийти</strong></button>
       </div>
