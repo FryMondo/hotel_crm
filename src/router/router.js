@@ -5,6 +5,8 @@ import RegistrationPage from "@/pages/RegistrationPage.vue";
 import FAQ from "@/pages/FAQ.vue";
 import ReservationPage from "@/pages/ReservationPage.vue";
 import RoomsPage from "@/pages/RoomsPage.vue";
+import AdditionalInfo from "@/pages/AdditionalInfo.vue";
+
 const routes = [
     {
         path: '/',
@@ -29,6 +31,10 @@ const routes = [
     {
         path: '/rooms',
         component: RoomsPage
+    },
+    {
+        path: '/additional',
+        component: AdditionalInfo
     }
 ];
 
