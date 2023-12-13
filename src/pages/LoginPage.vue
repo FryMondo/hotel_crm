@@ -39,9 +39,8 @@ export default {
     async loginUser() {
       try {
         const response = await axios.post('http://localhost:3000/login', this.form);
-        console.log(response.data);
-
         if (response.data.success) {
+          localStorage.setItem('username', response.data.username);
           this.$router.push('/');
         } else {
           if (response.data.message.includes('пошта')) {
