@@ -64,7 +64,11 @@ app.post('/login', async (req, res) => {
         const isPasswordValid = await bcrypt.compare(password, results[0].password);
 
         if (isPasswordValid) {
-            res.json({success: true, message: 'Успішний логін'});
+            res.json({
+                success: true,
+                message: 'Успішний логін',
+                username: results[0].username
+            });
         } else {
             res.json({success: false, message: '(!) Невірний пароль'});
         }
@@ -72,7 +76,7 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/reservation', async (req, res) => {
-    const { roomNumber, numberOfRooms, roomArea, placesInRoom, description, roomType, roomCost } = req.body;
+    const {roomNumber, numberOfRooms, roomArea, placesInRoom, description, roomType, roomCost} = req.body;
     const ID = 1;
 
     try {
@@ -114,6 +118,25 @@ app.get('/getRooms', (req, res) => {
         }
         res.status(200).json(results);
     });
+});
+
+app.post('/addInfo', async (req, res) => {
+    const { username, phone, surname, firstName } = req.body;
+    try {
+        const sqlUserInfo = 'INSERT INTO userinfo (username, phone, surname, firstName) VALUES (?, ?, ?, ?)';
+        const valuesUserInfo = [username, phone, surname, firstName];
+
+        db.query(sqlUserInfo, valuesUserInfo, (err, result) => {
+            if (err) {
+                console.log('Error executing query:', err);
+                res.status(500).send('Error adding info');
+                return;
+            }
+            res.status(200).send('Information added successfully');
+        });
+    } catch (error) {
+        res.status(500).send('Error adding info');
+    }
 });
 
 app.listen(port, () => {
