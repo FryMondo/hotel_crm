@@ -20,8 +20,12 @@
         </select>
       </div>
       <div class="input-box">
-        <input v-model="numberOfPeople" type="number">
         <label>Кількість людей в кімнаті:</label>
+        <select v-model="numberOfPeople">
+          <option v-for="count in peopleCountOptions" :key="count" :value="count">
+            {{ count }}
+          </option>
+        </select>
       </div>
       <button type="submit">Забронювати</button>
       <button @click="$router.push('/')">Повернутися на головну сторінку</button>
@@ -36,9 +40,10 @@ export default {
       startDate: '',
       endDate: '',
       roomNumber: '',
-      numberOfPeople: '',
+      numberOfPeople: 1,
       selectedRoom: null,
-      roomList: []
+      roomList: [],
+      peopleCountOptions: []
     }
   },
   methods: {
@@ -86,7 +91,8 @@ export default {
     updateNumberOfPeople() {
       const selectedRoom = this.roomList.find(room => room.roomNumber === this.selectedRoom);
       if (selectedRoom) {
-        this.numberOfPeople = selectedRoom.placesInRoom;
+        this.peopleCountOptions = Array.from({ length: selectedRoom.placesInRoom }, (_, index) => index + 1);
+        this.numberOfPeople = 1;
       }
     },
   },
