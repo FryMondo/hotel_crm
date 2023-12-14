@@ -2,7 +2,7 @@
   <div class="main-btn">
     <button @click="$router.push('/')">На головну сторінку</button>
   </div>
-  <div class="form-box">
+  <div class="form-box" v-if="isAdmin">
     <form @submit.prevent="addInformation">
       <h2>Додати номер в готель: </h2>
       <div class="input-box">
@@ -82,6 +82,8 @@ export default {
       roomCost: null,
       rooms: [],
       errors: {},
+      isAdmin: false,
+      role: ''
     }
   },
   methods: {
@@ -127,6 +129,21 @@ export default {
         const response = await fetch('http://localhost:3000/getRooms');
         if (response.ok) {
           this.rooms = await response.json();
+        } else {
+          console.error('Server response not OK');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
+    async fetchUserRole() {
+      const username = localStorage.getItem('username');
+      try {
+        const response = await fetch(`http://localhost:3000/getUserRole?username=${username}`);
+        if (response.ok) {
+          const data = await response.json();
+          this.role = data[0].role;
+          this.isAdmin = this.role === "ADMIN";
         } else {
           console.error('Server response not OK');
         }
@@ -236,10 +253,11 @@ export default {
       } else {
         return true;
       }
-    }
+    },
   },
   mounted() {
     this.fetchData();
+    this.fetchUserRole();
   }
 }
 </script>
