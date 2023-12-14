@@ -5,27 +5,31 @@
       <h2>Бронювання номеру</h2>
       <div class="input-box">
         <label>Початок бронювання:</label>
-        <input v-model="startDate" type="date" :min="minStartDate">
+        <input v-model="startDate" @input="clearError('startDate')" type="date" :min="minStartDate">
+        <div class="error-message">{{ errors.startDate }}</div>
       </div>
       <div class="input-box">
         <label>Кінець бронювання:</label>
-        <input v-model="endDate" type="date" :min="minEndDate">
+        <input v-model="endDate" @input="clearError('endDate')" type="date" :min="minEndDate">
+        <div class="error-message">{{ errors.endDate }}</div>
       </div>
       <div class="input-box">
         <label>Номер кімнати:</label>
-        <select v-model="selectedRoom" @change="updateNumberOfPeople">
+        <select v-model="selectedRoom" @change="handleRoomChange">
           <option v-for="room in roomList" :key="room.roomNumber" :value="room.roomNumber">
             {{ room.roomNumber }}
           </option>
         </select>
+        <div class="error-message">{{ errors.selectedRoom }}</div>
       </div>
       <div class="input-box">
         <label>Кількість людей в кімнаті:</label>
-        <select v-model="numberOfPeople">
+        <select v-model="numberOfPeople" @change="clearError('numberOfPeople')">
           <option v-for="count in peopleCountOptions" :key="count" :value="count">
             {{ count }}
           </option>
         </select>
+        <div class="error-message">{{ errors.numberOfPeople }}</div>
       </div>
       <button type="submit">Забронювати</button>
       <button @click="$router.push('/')">Повернутися на головну сторінку</button>
@@ -35,13 +39,13 @@
 </template>
 <script>
 export default {
-  data(){
+  data() {
     return {
       startDate: '',
       endDate: '',
       roomNumber: '',
       numberOfPeople: 1,
-      selectedRoom: null,
+      selectedRoom: '',
       roomList: [],
       peopleCountOptions: [],
       errors: {},
@@ -49,12 +53,17 @@ export default {
   },
   methods: {
     clearError(errorID) {
-      delete this.form.errors[errorID];
+      delete this.errors[errorID];
+    },
+    handleRoomChange() {
+      this.updateNumberOfPeople();
+      this.clearError('selectedRoom');
     },
     async reserveRoom() {
       try {
         const username = localStorage.getItem('username');
-        if (!username) {
+        if (!username || !this.validateStartDate() || !this.validateEndDate() || !this.validateSelectedRoom()
+            || !this.validateNumberOfPeople()) {
           return;
         }
         const responseAddInfo = await fetch('http://localhost:3000/reserveRoom', {
@@ -66,16 +75,14 @@ export default {
             usernameID: username,
             startDate: this.startDate,
             endDate: this.endDate,
-            roomNumberID: this.roomNumber,
+            roomNumberID: this.selectedRoom,
             numberOfPeople: this.numberOfPeople
           }),
         });
-
-        if (responseAddInfo.ok) {
-          console.log("Information added successfully!");
-        } else {
-          console.error('Error:', responseAddInfo.statusText);
-        }
+        this.startDate = '';
+        this.endDate = '';
+        this.selectedRoom = '';
+        this.numberOfPeople = '';
       } catch (error) {
         console.error('Error:', error);
       }
@@ -92,10 +99,67 @@ export default {
         console.error('Error fetching data:', error);
       }
     },
+    validateStartDate() {
+      const selectedDate = new Date(this.startDate);
+      const today = new Date();
+
+      if (!this.startDate) {
+        this.errors.startDate = '(!) Заповніть початок бронювання';
+        return false;
+      } else if (selectedDate < today) {
+        this.errors.startDate = '(!) Не можна обрати минулий час';
+        return false;
+      } else if (selectedDate > new Date('2026-01-01')) {
+        this.errors.startDate = '(!) Максимальна дата 01.01.2026';
+        return false;
+      } else {
+        this.errors.startDate = '';
+        return true;
+      }
+    },
+    validateEndDate() {
+      const selectedDate = new Date(this.endDate);
+      const start = new Date(this.startDate);
+      const today = new Date();
+
+      if (!this.endDate) {
+        this.errors.endDate = '(!) Заповніть кінець бронювання';
+        return false;
+      } else if (selectedDate < today) {
+        this.errors.endDate = '(!) Не можна обрати минулий час';
+        return false;
+      } else if (selectedDate > new Date('2026-01-01')) {
+        this.errors.endDate = '(!) Максимальна дата 01.01.2026';
+        return false;
+      } else if (selectedDate < start) {
+        this.errors.endDate = '(!) Не можна обрати дату перед початком бронювання';
+        return false;
+      } else {
+        this.errors.endDate = '';
+        return true;
+      }
+    },
+    validateSelectedRoom() {
+      if (!this.selectedRoom) {
+        this.errors.selectedRoom = "(!) Оберіть кімнату"
+        return false;
+      } else {
+        return true;
+      }
+    },
+    validateNumberOfPeople() {
+      if (!this.numberOfPeople) {
+        this.errors.numberOfPeople = "(!) Оберіть кількість людей"
+        return false;
+      } else {
+        return true;
+      }
+
+    },
     updateNumberOfPeople() {
       const selectedRoom = this.roomList.find(room => room.roomNumber === this.selectedRoom);
       if (selectedRoom) {
-        this.peopleCountOptions = Array.from({ length: selectedRoom.placesInRoom },
+        this.peopleCountOptions = Array.from({length: selectedRoom.placesInRoom},
             (_, index) => index + 1);
         this.numberOfPeople = 1;
       }
@@ -187,5 +251,13 @@ button {
   font-size: 1em;
   font-weight: 600;
   margin: 5px;
+}
+
+.error-message {
+  color: rgb(255, 0, 0);
+  position: absolute;
+  top: 110%;
+  font-size: 1em;
+  width: 400px;
 }
 </style>
