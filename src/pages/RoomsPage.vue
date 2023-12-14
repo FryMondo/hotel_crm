@@ -1,4 +1,7 @@
 <template>
+  <div class="main-btn">
+    <button @click="$router.push('/')">На головну сторінку</button>
+  </div>
   <div class="form-box">
     <form @submit.prevent="addInformation">
       <h2>Додати номер в готель: </h2>
@@ -250,6 +253,7 @@ export default {
   backdrop-filter: blur(10px);
   position: absolute;
   width: 12%;
+  margin-top: 10px;
 }
 
 h2 {
@@ -296,6 +300,10 @@ input:valid ~ label {
   top: 110%;
   font-size: 1em;
   width: 400px;
+}
+
+.main-btn {
+  width: 340px;
 }
 
 button {

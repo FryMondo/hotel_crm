@@ -127,4 +127,17 @@ input[type="radio"] {
   padding: 15px;
   border-radius: 5px;
 }
+
+button {
+  width: 100%;
+  height: 40px;
+  border-radius: 40px;
+  background: black;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: 600;
+}
 </style>
