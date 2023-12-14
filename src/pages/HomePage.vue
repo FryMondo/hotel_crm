@@ -15,7 +15,7 @@
     <button @click="$router.push('/reservation')"><strong>Бронювання</strong></button>
     <button @click="$router.push('/rooms')"><strong>Кімнати</strong></button>
     <div class="navigation-wrapper">
-      <button class="navigation-btn"><strong>user</strong></button>
+      <button class="navigation-btn"><strong>{{showUsername()}}</strong></button>
       <div class="navigation-menu">
         <button><strong>Заброньовані номери</strong></button>
         <hr>
@@ -26,7 +26,7 @@
     </div>
   </div>
   <div class="welcome-text">
-    <p><strong>Вітаємо вас на сторінці нашого готелю!</strong></p>
+    <p><strong>Вітаємо вас, {{showUsername()}}, на сторінці нашого готелю!</strong></p>
   </div>
   <hr class="welcome-line">
   <div class="hotel_info">
@@ -138,6 +138,9 @@ export default {
     this.stopImageRotation();
   },
   methods: {
+    showUsername(){
+      return localStorage.getItem('username');
+    },
     startImageRotationHotel() {
       this.intervalId = setInterval(this.rotateImageHotel, 5000);
     },
