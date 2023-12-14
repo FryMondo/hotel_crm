@@ -21,6 +21,10 @@
         <hr>
         <button @click="$router.push('/additional')"><strong>Додати інформацію</strong></button>
         <hr>
+        <div class="secret" v-if="isAdmin">
+          <button><strong>Користувачі</strong></button>
+          <hr>
+        </div>
         <button @click="$router.push('/login')"><strong>Вийти</strong></button>
       </div>
     </div>
@@ -114,6 +118,8 @@ export default {
         "./pictures/room_info/main_room3.jpg"],
       currentImageIndex: 0,
       intervalId: null,
+      isAdmin: false,
+      role: ''
     };
   },
   computed: {
@@ -133,11 +139,27 @@ export default {
   mounted() {
     this.startImageRotationHotel();
     this.startImageRotationRoom();
+    this.fetchUserRole();
   },
   beforeUnmount() {
     this.stopImageRotation();
   },
   methods: {
+    async fetchUserRole() {
+      const username = localStorage.getItem('username');
+      try {
+        const response = await fetch(`http://localhost:3000/getUserRole?username=${username}`);
+        if (response.ok) {
+          const data = await response.json();
+          this.role = data[0].role;
+          this.isAdmin = this.role === "ADMIN";
+        } else {
+          console.error('Server response not OK');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
     showUsername(){
       return localStorage.getItem('username');
     },
