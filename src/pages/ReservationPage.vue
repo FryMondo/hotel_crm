@@ -4,12 +4,12 @@
     <form @submit.prevent="reserveRoom">
       <h2>Бронювання номеру</h2>
       <div class="input-box">
-        <input v-model="startDate" type="date">
         <label>Початок бронювання:</label>
+        <input v-model="startDate" type="date" :min="minStartDate">
       </div>
       <div class="input-box">
-        <input v-model="endDate" type="date">
         <label>Кінець бронювання:</label>
+        <input v-model="endDate" type="date" :min="minEndDate">
       </div>
       <div class="input-box">
         <label>Номер кімнати:</label>
@@ -43,10 +43,14 @@ export default {
       numberOfPeople: 1,
       selectedRoom: null,
       roomList: [],
-      peopleCountOptions: []
+      peopleCountOptions: [],
+      errors: {},
     }
   },
   methods: {
+    clearError(errorID) {
+      delete this.form.errors[errorID];
+    },
     async reserveRoom() {
       try {
         const username = localStorage.getItem('username');
@@ -100,6 +104,15 @@ export default {
   mounted() {
     this.fetchData();
   },
+  computed: {
+    minStartDate() {
+      const today = new Date();
+      return today.toISOString().split('T')[0];
+    },
+    minEndDate() {
+      return this.startDate;
+    },
+  }
 }
 </script>
 
