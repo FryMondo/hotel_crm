@@ -16,7 +16,7 @@
       <div class="input-box">
         <label>Номер кімнати:</label>
         <select v-model="selectedRoom" @change="handleRoomChange">
-          <option v-for="room in roomList" :key="room.roomNumber" :value="room.roomNumber">
+          <option v-for="room in availableRooms" :key="room.roomNumber" :value="room.roomNumber">
             {{ room.roomNumber }}
           </option>
         </select>
@@ -49,6 +49,7 @@ export default {
       roomList: [],
       peopleCountOptions: [],
       errors: {},
+      availableRooms: []
     }
   },
   methods: {
@@ -66,6 +67,7 @@ export default {
             || !this.validateNumberOfPeople()) {
           return;
         }
+
         const responseAddInfo = await fetch('http://localhost:3000/reserveRoom', {
           method: 'POST',
           headers: {
@@ -83,6 +85,7 @@ export default {
         this.endDate = '';
         this.selectedRoom = '';
         this.numberOfPeople = '';
+        await this.fetchAvailableRooms();
       } catch (error) {
         console.error('Error:', error);
       }
@@ -97,6 +100,18 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+      }
+    },
+    async fetchAvailableRooms() {
+      try {
+        const response = await fetch('http://localhost:3000/getAvailableRooms');
+        if (response.ok) {
+          this.availableRooms = await response.json();
+        } else {
+          console.error('Server response not OK');
+        }
+      } catch (error) {
+        console.error('Error fetching available rooms:', error);
       }
     },
     validateStartDate() {
@@ -167,6 +182,7 @@ export default {
   },
   mounted() {
     this.fetchData();
+    this.fetchAvailableRooms();
   },
   computed: {
     minStartDate() {
