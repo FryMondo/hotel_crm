@@ -50,7 +50,6 @@ app.post('/login', async (req, res) => {
     const {email, password} = req.body;
     const sql = 'SELECT * FROM users WHERE email = ?';
     const values = [email];
-
     db.query(sql, values, async (err, results) => {
         if (err) {
             res.status(500).send('Error logging in');
@@ -60,9 +59,7 @@ app.post('/login', async (req, res) => {
             res.json({success: false, message: '(!) Невірна пошта'});
             return;
         }
-
         const isPasswordValid = await bcrypt.compare(password, results[0].password);
-
         if (isPasswordValid) {
             res.json({
                 success: true,

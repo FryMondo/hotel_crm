@@ -53,8 +53,10 @@ export default {
         });
 
         if (response.ok) {
+          localStorage.setItem('username', this.username);
           this.$router.push('/');
         } else {
+
         }
       } catch (error) {
         console.error('Error:', error);
