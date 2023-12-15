@@ -15,18 +15,22 @@
     <button @click="$router.push('/reservation')"><strong>Бронювання</strong></button>
     <button @click="$router.push('/rooms')"><strong>Кімнати</strong></button>
     <div class="navigation-wrapper">
-      <button class="navigation-btn"><strong>user</strong></button>
+      <button class="navigation-btn"><strong>{{showUsername()}}</strong></button>
       <div class="navigation-menu">
         <button><strong>Заброньовані номери</strong></button>
         <hr>
         <button @click="$router.push('/additional')"><strong>Додати інформацію</strong></button>
         <hr>
+        <div class="secret" v-if="isAdmin">
+          <button><strong>Користувачі</strong></button>
+          <hr>
+        </div>
         <button @click="$router.push('/login')"><strong>Вийти</strong></button>
       </div>
     </div>
   </div>
   <div class="welcome-text">
-    <p><strong>Вітаємо вас на сторінці нашого готелю!</strong></p>
+    <p><strong>Вітаємо вас, {{showUsername()}}, на сторінці нашого готелю!</strong></p>
   </div>
   <hr class="welcome-line">
   <div class="hotel_info">
@@ -114,6 +118,8 @@ export default {
         "./pictures/room_info/main_room3.jpg"],
       currentImageIndex: 0,
       intervalId: null,
+      isAdmin: false,
+      role: ''
     };
   },
   computed: {
@@ -133,11 +139,30 @@ export default {
   mounted() {
     this.startImageRotationHotel();
     this.startImageRotationRoom();
+    this.fetchUserRole();
   },
   beforeUnmount() {
     this.stopImageRotation();
   },
   methods: {
+    async fetchUserRole() {
+      const username = localStorage.getItem('username');
+      try {
+        const response = await fetch(`http://localhost:3000/getUserRole?username=${username}`);
+        if (response.ok) {
+          const data = await response.json();
+          this.role = data[0].role;
+          this.isAdmin = this.role === "ADMIN";
+        } else {
+          console.error('Server response not OK');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
+    showUsername(){
+      return localStorage.getItem('username');
+    },
     startImageRotationHotel() {
       this.intervalId = setInterval(this.rotateImageHotel, 5000);
     },
