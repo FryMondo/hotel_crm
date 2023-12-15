@@ -11,6 +11,15 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+const login = require('./serverParts/LoginServer');
+const registration = require('./serverParts/RegistrServer');
+const addRoomInfoServer = require('./serverParts/AddRoomInfoServer');
+const takeRoomInfoServer = require('./serverParts/TakeRoomInfoServer');
+const addUserInfoServer = require('./serverParts/AddUserInfoServer');
+const reserveServer = require('./serverParts/ReserveServer');
+const availableRoomServer = require('./serverParts/AvalableRoomServer');
+const userRoleServer = require('./serverParts/UserRoleServer');
+
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -26,174 +35,21 @@ db.connect((err) => {
     console.log('Connected to MySQL database');
 });
 
-app.post('/register', async (req, res) => {
-    const {email, username, password} = req.body;
-    try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const sql = 'INSERT INTO users (email, username, password) VALUES (?, ?, ?)';
-        const values = [email, username, hashedPassword];
+app.post('/register', registration);
 
-        db.query(sql, values, (err, result) => {
-            if (err) {
-                console.log('Error executing query:', err);
-                res.status(500).send('Error registering user');
-                return;
-            }
-            res.status(200).send('User registered successfully');
-        });
-    } catch (error) {
-        res.status(500).send('Error registering user');
-    }
-});
+app.post('/login', login);
 
-app.post('/login', async (req, res) => {
-    const {email, password} = req.body;
-    const sql = 'SELECT * FROM users WHERE email = ?';
-    const values = [email];
-    db.query(sql, values, async (err, results) => {
-        if (err) {
-            res.status(500).send('Error logging in');
-            return;
-        }
-        if (results.length === 0) {
-            res.json({success: false, message: '(!) Невірна пошта'});
-            return;
-        }
-        const isPasswordValid = await bcrypt.compare(password, results[0].password);
-        if (isPasswordValid) {
-            res.json({
-                success: true,
-                message: 'Успішний логін',
-                username: results[0].username
-            });
-        } else {
-            res.json({success: false, message: '(!) Невірний пароль'});
-        }
-    });
-});
+app.post('/reservation', addRoomInfoServer);
 
-app.post('/reservation', async (req, res) => {
-    const {roomNumber, numberOfRooms, roomArea, placesInRoom, description, roomType, roomCost} = req.body;
-    try {
-        const sqlRoomInfo = 'INSERT INTO roominformation (placesInRoom, roomType, roomCost) VALUES (?, ?, ?)';
-        const roomInformationValues = [placesInRoom, roomType, roomCost];
-        db.query(sqlRoomInfo, roomInformationValues, (err, result) => {
-            if (err) {
-                console.log('Error executing query:', err);
-                res.status(500).send('Error adding info into table roominformation');
-                return;
-            }
-            const roomInformationID = result.insertId;
-            const sqlRooms = 'INSERT INTO rooms (roomNumber, numberOfRooms, roomArea, description, roomInformationID) VALUES (?, ?, ?, ?, ?)';
-            const roomsValues = [roomNumber, numberOfRooms, roomArea, description, roomInformationID];
-            db.query(sqlRooms, roomsValues, (err, result) => {
-                if (err) {
-                    console.log('Error executing query:', err);
-                    res.status(500).send('Error adding info into table rooms');
-                    return;
-                }
-                res.status(200).send('Successfully added information in roominformation and rooms');
-            });
-        });
-    } catch (error) {
-        res.status(500).send('Error adding info');
-    }
-});
+app.get('/getRooms', takeRoomInfoServer);
 
-app.get('/getRooms', (req, res) => {
-    const sql = 'SELECT * FROM rooms INNER JOIN roominformation ON rooms.roomInformationID = roominformation.ID';
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.log('Error executing query:', err);
-            res.status(500).send('Error getting room information');
-            return;
-        }
-        res.status(200).json(results);
-    });
-});
+app.post('/addInfo', addUserInfoServer);
 
-app.post('/addInfo', async (req, res) => {
-    const {username, phone, surname, firstName} = req.body;
-    try {
-        const sqlUserInfo = 'INSERT INTO userinfo (username, phone, surname, firstName) VALUES (?, ?, ?, ?)';
-        const valuesUserInfo = [username, phone, surname, firstName];
-        db.query(sqlUserInfo, valuesUserInfo, (err, result) => {
-            if (err) {
-                console.log('Error executing query:', err);
-                res.status(500).send('Error adding info');
-                return;
-            }
-            res.status(200).send('Information added successfully');
-        });
-    } catch (error) {
-        res.status(500).send('Error adding info');
-    }
-});
+app.post('/reserveRoom', reserveServer);
 
-app.post('/reserveRoom', async (req, res) => {
-    const { usernameID, startDate, endDate, roomNumberID, numberOfPeople } = req.body;
-    try {
-        const checkAvailabilityQuery = 'SELECT * FROM roomreservation WHERE roomNumberID = ? AND ((startDate <= ? AND endDate >= ?) OR (startDate <= ? AND endDate >= ?))';
-        const checkAvailabilityValues = [roomNumberID, startDate, startDate, endDate, endDate];
+app.get('/getAvailableRooms', availableRoomServer);
 
-        db.query(checkAvailabilityQuery, checkAvailabilityValues, (availabilityErr, availabilityResult) => {
-            if (availabilityErr) {
-                console.log('Error checking room availability:', availabilityErr);
-                res.status(500).send('Error checking room availability');
-                return;
-            }
-
-            if (availabilityResult.length > 0) {
-                res.status(400).send('Room not available for the selected dates');
-                return;
-            }
-            const sqlReserve = 'INSERT INTO roomreservation (usernameID, startDate, endDate, roomNumberID, numberOfPeople) VALUES (?, ?, ?, ?, ?)';
-            const valuesReserve = [usernameID, startDate, endDate, roomNumberID, numberOfPeople];
-
-            db.query(sqlReserve, valuesReserve, (reserveErr, reserveResult) => {
-                if (reserveErr) {
-                    console.log('Error executing query:', reserveErr);
-                    res.status(500).send('Error adding reservation information');
-                    return;
-                }
-
-                res.status(200).send('Room reserved successfully');
-            });
-        });
-    } catch (error) {
-        res.status(500).send('Error adding reservation information');
-    }
-});
-
-app.get('/getAvailableRooms', (req, res) => {
-    const sql = `SELECT roomNumber FROM rooms WHERE roomNumber NOT IN (
-        SELECT roomNumberID
-        FROM roomreservation
-        WHERE (endDate >= CURDATE()))`;
-
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.log('Error executing query:', err);
-            res.status(500).send('Error getting available rooms');
-            return;
-        }
-
-        res.status(200).json(results);
-    });
-});
-
-app.get('/getUserRole', (req, res) => {
-    const { username } = req.query;
-    const sql = 'SELECT role FROM roles WHERE username = ?';
-    db.query(sql, [username], (err, results) => {
-        if (err) {
-            console.log('Error executing query:', err);
-            res.status(500).send('Error getting role');
-            return;
-        }
-        res.status(200).json(results);
-    });
-});
+app.get('/getUserRole', userRoleServer);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
