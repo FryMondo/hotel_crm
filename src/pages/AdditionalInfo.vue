@@ -30,8 +30,84 @@
   </body>
 </template>
 
-<script src="./js/AddInfoJS.js">
+<script>
+import {IMaskDirective} from "vue-imask";
 
+export default {
+  data() {
+    return {
+      phone: '',
+      surname: '',
+      firstName: '',
+      errors: {}
+    }
+  },
+  methods: {
+    clearError(errorID) {
+      delete this.errors[errorID];
+    },
+    async addInfo() {
+      const username = localStorage.getItem('username');
+      if (!username || !this.validatePhone() || !this.validateSurname() || !this.validateFirstName()) {
+        return;
+      }
+      const response = await fetch('http://localhost:3000/addInfo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username,
+          firstName: this.firstName,
+          surname: this.surname,
+          phone: this.phone
+        })
+      });
+      this.firstName = '';
+      this.surname = '';
+      this.phone = '';
+      if (response.ok) {
+        console.log('User info updated successfully');
+      } else {
+        console.error('Failed to update user info');
+      }
+    },
+    validateSurname() {
+      if (!this.surname.trim()) {
+        this.errors.surname = '(!) Заповніть поле Прізвище';
+        return false;
+      } else if (!/^[a-zA-Zа-яА-ЯёЁіІїЇєЄ\s\-']+$/i.test(this.surname)) {
+        this.errors.surname = '(!) Поле Прізвище не повинно містити цифри';
+        return false;
+      } else {
+        return true;
+      }
+    },
+    validateFirstName() {
+      if (!this.firstName.trim()) {
+        this.errors.firstName = '(!) Заповніть поле Ім\'я';
+        return false;
+      } else if (!/^[a-zA-Zа-яА-ЯёЁіІїЇєЄ\s\-']+$/i.test(this.firstName)) {
+        this.errors.firstName = '(!) Поле Ім\'я не повинно містити цифри';
+        return false;
+      } else {
+        return true;
+      }
+    },
+    validatePhone() {
+      if (this.phone.length >= 18) {
+        return true;
+      } else {
+        this.errors.phone = '(!) Введіть всі цифри в номер';
+        return false;
+      }
+    },
+  }
+  ,
+  directives: {
+    imask: IMaskDirective
+  }
+}
 </script>
 
 <style scoped src="./styles/AddInfoStyle.css">
