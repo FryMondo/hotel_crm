@@ -2,14 +2,10 @@
   <div class="main-btn">
     <button @click="$router.push('/')">На головну сторінку</button>
   </div>
-<<<<<<< HEAD
   <div class = "title">
-    <h1>НОМЕРА В ГОТЕЛІ: </h1>
+    <h1>НОМЕРА В ГОТЕЛІ:</h1>
   </div>
-  <div class="form-box">
-=======
   <div class="form-box" v-if="isAdmin">
->>>>>>> 9bd3f413a0bc4bdd99832ff64cdf78e3375d4e5c
     <form @submit.prevent="addInformation">
       <h2>Додати номер в готель: </h2>
       <div class="input-box">
