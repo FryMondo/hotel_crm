@@ -23,10 +23,6 @@
         <hr>
         <button @click="$router.push('/additional')"><strong>Додати інформацію</strong></button>
         <hr>
-        <div class="secret" v-if="isAdmin">
-          <button><strong>Користувачі</strong></button>
-          <hr>
-        </div>
         <button @click="$router.push('/login')"><strong>Вийти</strong></button>
       </div>
     </div>

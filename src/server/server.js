@@ -10,14 +10,15 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-const login = require('./serverParts/LoginServer');
-const registration = require('./serverParts/RegistrServer');
-const addRoomInfoServer = require('./serverParts/AddRoomInfoServer');
-const takeRoomInfoServer = require('./serverParts/TakeRoomInfoServer');
-const addUserInfoServer = require('./serverParts/AddUserInfoServer');
-const reserveServer = require('./serverParts/ReserveServer');
-const availableRoomServer = require('./serverParts/AvalableRoomServer');
-const userRoleServer = require('./serverParts/UserRoleServer');
+const post_login = require('./serverParts/Post_login');
+const post_registration = require('./serverParts/Post_registration');
+const post_addRoomInfo = require('./serverParts/Post_roomInfo');
+const post_addUserInfo = require('./serverParts/Post_userInfo');
+const post_reservation = require('./serverParts/Post_reservation');
+
+const get_RoomInfo = require('./serverParts/Get_roomInfo');
+const get_availableRoom = require('./serverParts/Get_avalableRoom');
+const get_userRole = require('./serverParts/Get_userRole');
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -34,21 +35,21 @@ db.connect((err) => {
     console.log('Connected to MySQL database');
 });
 
-app.post('/register', registration);
+app.post('/register', post_registration);
 
-app.post('/login', login);
+app.post('/login', post_login);
 
-app.post('/reservation', addRoomInfoServer);
+app.post('/reservation', post_addRoomInfo);
 
-app.get('/getRooms', takeRoomInfoServer);
+app.get('/getRooms', get_RoomInfo);
 
-app.post('/addInfo', addUserInfoServer);
+app.post('/addInfo', post_addUserInfo);
 
-app.post('/reserveRoom', reserveServer);
+app.post('/reserveRoom', post_reservation);
 
-app.get('/getAvailableRooms', availableRoomServer);
+app.get('/getAvailableRooms', get_availableRoom);
 
-app.get('/getUserRole', userRoleServer);
+app.get('/getUserRole', get_userRole);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
