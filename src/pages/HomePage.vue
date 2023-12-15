@@ -2,13 +2,15 @@
   <div class="navbar">
     <button><strong>Hotel</strong></button>
     <div class="navigation-wrapper">
-      <button class="navigation-btn"><strong>Навігація</strong></button>
+      <button class="navigation-btn" @click="scrollToWelcome"><strong>Навігація</strong></button>
       <div class="navigation-menu">
-        <button><strong>Вітання</strong></button>
+        <button @click="scrollToWelcome"><strong>Вітання</strong></button>
         <hr>
-        <button><strong>Інформація</strong></button>
+        <button @click="scrollToInformation"><strong>Інформація про готель</strong></button>
         <hr>
-        <button><strong>Розташування</strong></button>
+        <button @click="scrollToRoomInformation"><strong>Інформація про кімнати</strong></button>
+        <hr>
+        <button @click="scrollToLocation"><strong>Розташування</strong></button>
       </div>
     </div>
     <button @click="$router.push('/FAQ')"><strong>FAQ</strong></button>
@@ -29,11 +31,11 @@
       </div>
     </div>
   </div>
-  <div class="welcome-text">
+  <div class="welcome-text" id="welcome">
     <p><strong>Вітаємо вас, {{showUsername()}}, на сторінці нашого готелю!</strong></p>
   </div>
   <hr class="welcome-line">
-  <div class="hotel_info">
+  <div class="hotel_info" id="information">
     <div class="info-title">
       <p><strong>Інформація про готель</strong></p>
     </div>
@@ -52,7 +54,7 @@
     </div>
   </div>
   <hr class="info-line">
-  <div class="hotel_info">
+  <div class="hotel_info" id="room-information">
     <div class="info-title">
       <p><strong>Інформація про кімнати</strong></p>
     </div>
@@ -76,7 +78,7 @@
     </div>
   </div>
   <hr class="info-line">
-  <div class="placement">
+  <div class="placement" id="location">
     <div class="info-title">
       <p><strong>Де розташований готель?</strong></p>
     </div>
@@ -113,7 +115,7 @@ export default {
   data() {
     return {
       imagesHotel: ["./pictures/hotel_info/main_hotel1.jpeg", "./pictures/hotel_info/main_hotel2.jpeg",
-        "./pictures/hotel_info/main_hotel3.jpeg", "./pictures/hotel_info/main_hotel4.jpeg"],
+        "./pictures/hotel_info/main_hotel3.jpeg"],
       imagesRoom: ["./pictures/room_info/main_room1.jpg", "./pictures/room_info/main_room2.jpg",
         "./pictures/room_info/main_room3.jpg"],
       currentImageIndex: 0,
@@ -137,8 +139,7 @@ export default {
     },
   },
   mounted() {
-    this.startImageRotationHotel();
-    this.startImageRotationRoom();
+    this.startImageRotation();
     this.fetchUserRole();
   },
   beforeUnmount() {
@@ -160,24 +161,34 @@ export default {
         console.error('Error fetching data:', error);
       }
     },
+    scrollToWelcome() {
+      const welcomeSection = document.getElementById('welcome');
+      welcomeSection.scrollIntoView({ behavior: 'smooth' });
+    },
+    scrollToInformation() {
+      const informationSection = document.getElementById('information');
+      informationSection.scrollIntoView({ behavior: 'smooth' });
+    },
+    scrollToRoomInformation() {
+      const informationSection = document.getElementById('room-information');
+      informationSection.scrollIntoView({ behavior: 'smooth' });
+    },
+    scrollToLocation() {
+      const locationSection = document.getElementById('location');
+      locationSection.scrollIntoView({ behavior: 'smooth' });
+    },
     showUsername(){
       return localStorage.getItem('username');
     },
-    startImageRotationHotel() {
-      this.intervalId = setInterval(this.rotateImageHotel, 5000);
-    },
-    startImageRotationRoom() {
-      this.intervalId = setInterval(this.rotateImageRoom, 5000);
+    startImageRotation() {
+      this.intervalId = setInterval(this.rotateImage, 5000);
     },
     stopImageRotation() {
       clearInterval(this.intervalId);
     },
-    rotateImageHotel() {
+    rotateImage() {
       this.currentImageIndex = (this.currentImageIndex + 1) % this.imagesHotel.length;
-    },
-    rotateImageRoom() {
-      this.currentImageIndex = (this.currentImageIndex + 1) % this.imagesRoom.length;
-    },
+    }
   },
 };
 </script>
