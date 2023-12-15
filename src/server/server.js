@@ -19,6 +19,7 @@ const post_reservation = require('./serverParts/Post_reservation');
 const get_RoomInfo = require('./serverParts/Get_roomInfo');
 const get_availableRoom = require('./serverParts/Get_avalableRoom');
 const get_userRole = require('./serverParts/Get_userRole');
+const get_reserved = require('./serverParts/Get_reserved');
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -50,6 +51,8 @@ app.post('/reserveRoom', post_reservation);
 app.get('/getAvailableRooms', get_availableRoom);
 
 app.get('/getUserRole', get_userRole);
+
+app.get('/getReserved', get_reserved);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

@@ -19,7 +19,7 @@
     <div class="navigation-wrapper">
       <button class="navigation-btn"><strong>{{ showUsername() }}</strong></button>
       <div class="navigation-menu">
-        <button><strong>Заброньовані номери</strong></button>
+        <button @click="$router.push('/reserved')"><strong>Заброньовані номери</strong></button>
         <hr>
         <button @click="$router.push('/additional')"><strong>Додати інформацію</strong></button>
         <hr>
