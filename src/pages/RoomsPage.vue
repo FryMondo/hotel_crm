@@ -2,42 +2,45 @@
   <div class="main-btn">
     <button @click="$router.push('/')">На головну сторінку</button>
   </div>
+  <div class = "title">
+    <h1>НОМЕРА В ГОТЕЛІ: </h1>
+  </div>
   <div class="form-box">
     <form @submit.prevent="addInformation">
       <h2>Додати номер в готель: </h2>
       <div class="input-box">
+        <input v-model="roomNumber" @input="clearError('roomNumber')" type="number" min = "1" max = "150">
         <label>Номер кімнати: </label>
-        <input v-model="roomNumber" @input="clearError('roomNumber')" type="number">
         <div class="error-message">{{ errors.roomNumber }}</div>
       </div>
       <div class="input-box">
+        <input v-model="numberOfRooms" @input="clearError('numberOfRooms')" type="number" min = "1" max = "6">
         <label>Кількість кімнат: </label>
-        <input v-model="numberOfRooms" @input="clearError('numberOfRooms')" type="number">
         <div class="error-message">{{ errors.numberOfRooms }}</div>
       </div>
       <div class="input-box">
+        <input v-model="roomArea" @input="clearError('roomArea')" type="number" min = "25" max = "70">
         <label>Площа кімнати: </label>
-        <input v-model="roomArea" @input="clearError('roomArea')" type="number">
         <div class="error-message">{{ errors.roomArea }}</div>
       </div>
       <div class="input-box">
+        <input v-model="placesInRoom" @input="clearError('placesInRoom')" type="number" min = "1" max = "5">
         <label>Кількість місць в номері: </label>
-        <input v-model="placesInRoom" @input="clearError('placesInRoom')" type="number">
         <div class="error-message">{{ errors.placesInRoom }}</div>
       </div>
       <div class="input-box">
-        <label>Тип номеру: </label>
         <input v-model="roomType" @input="clearError('roomType')" type="text">
+        <label>Тип номеру: </label>
         <div class="error-message">{{ errors.roomType }}</div>
       </div>
       <div class="input-box">
+        <input v-model="roomCost" @input="clearError('roomCost')" type="number" min = "250" max = "10000">
         <label>Ціна кімнати: </label>
-        <input v-model="roomCost" @input="clearError('roomCost')" type="number">
         <div class="error-message">{{ errors.roomCost }}</div>
       </div>
       <div class="input-box">
-        <label>Опис номеру: </label>
         <input v-model="description" @input="clearError('description')" type="text">
+        <label>Опис номеру: </label>
         <div class="error-message">{{ errors.description }}</div>
       </div>
       <button type="submit">Додати інформацію</button>
@@ -252,7 +255,7 @@ export default {
   border-radius: 20px;
   backdrop-filter: blur(10px);
   position: absolute;
-  width: 12%;
+  width: min-content;
   margin-top: 10px;
 }
 
@@ -320,18 +323,28 @@ button {
 }
 
 table {
-  width: 60%;
-  margin-left: 100px;
+  width: 80%;
+  margin-left: 400px;
   padding: 30px;
   min-height: 90px;
-  border-radius: 10px;
-  border-color: #fff;
+  border-color: #000;
+
 }
 
 th {
-  border-radius: 10px;
-  border: 2px solid #fff;
+  border: 2px solid #000;
   height: 40px;
-
+  font-size: 25px;
+  background-color: grey;
+}
+td {
+  border: 2px solid #000;
+  height: 40px;
+  text-align: center;
+  font-size: 30px;
+  background-color: lightgrey;
+}
+.title{
+  text-align: center;
 }
 </style>

@@ -4,31 +4,35 @@
     <form @submit.prevent="reserveRoom">
       <h2>Бронювання номеру</h2>
       <div class="input-box">
-        <label>Початок бронювання:</label>
+
         <input v-model="startDate" @input="clearError('startDate')" type="date" :min="minStartDate">
+        <label>Початок бронювання:</label>
         <div class="error-message">{{ errors.startDate }}</div>
       </div>
       <div class="input-box">
-        <label>Кінець бронювання:</label>
+
         <input v-model="endDate" @input="clearError('endDate')" type="date" :min="minEndDate">
+        <label>Кінець бронювання:</label>
         <div class="error-message">{{ errors.endDate }}</div>
       </div>
-      <div class="input-box">
+      <div class="input-select">
         <label>Номер кімнати:</label>
         <select v-model="selectedRoom" @change="handleRoomChange">
           <option v-for="room in availableRooms" :key="room.roomNumber" :value="room.roomNumber">
             {{ room.roomNumber }}
           </option>
         </select>
+
         <div class="error-message">{{ errors.selectedRoom }}</div>
       </div>
-      <div class="input-box">
+      <div class="input-select">
         <label>Кількість людей в кімнаті:</label>
         <select v-model="numberOfPeople" @change="clearError('numberOfPeople')">
           <option v-for="count in peopleCountOptions" :key="count" :value="count">
             {{ count }}
           </option>
         </select>
+
         <div class="error-message">{{ errors.numberOfPeople }}</div>
       </div>
       <button type="submit">Забронювати</button>
@@ -214,7 +218,7 @@ body {
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 20px;
   backdrop-filter: blur(10px);
-  width: 13%;
+  width: min-content;
 }
 
 h2 {
@@ -245,6 +249,22 @@ input:valid ~ label {
   top: -5px;
 }
 
+.input-select {
+    position: relative;
+    margin: 30px 0;
+    width: 310px;
+    border-bottom: 2px solid #fff;
+}
+
+.input-select select {
+    width: 100%;
+    height: 50px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 1em;
+    padding: 0 35px 0 5px;
+}
 .input-box input {
   width: 100%;
   height: 50px;
