@@ -1,4 +1,7 @@
 <template>
+  <div class="main-btn">
+    <button @click="$router.push('/')">На головну сторінку</button>
+  </div>
   <table id="data-table">
     <thead>
     <tr>
@@ -10,8 +13,8 @@
     </thead>
     <tbody>
     <tr v-for="room in reserved" :key="room.roomNumber">
-      <td>{{ room.startDate }}</td>
-      <td>{{ room.endDate }}</td>
+      <td>{{ formatDate(room.startDate) }}</td>
+      <td>{{ formatDate(room.endDate) }}</td>
       <td>{{ room.numberOfPeople }}</td>
       <td>{{ room.roomNumberID }}</td>
     </tr>
@@ -28,9 +31,9 @@ export default {
   },
   methods: {
     async fetchData() {
-      const username = localStorage.getItem('username');
+      const usernameID = localStorage.getItem('username');
       try {
-        const response = await fetch(`http://localhost:3000/getReserved?username=${username}`);
+        const response = await fetch(`http://localhost:3000/getReserved?usernameID=${usernameID}`);
         if (response.ok) {
           this.reserved = await response.json();
         } else {
@@ -39,7 +42,11 @@ export default {
       } catch (error) {
         console.error('Error fetching data:', error);
       }
-    }
+    },
+    formatDate(dateString) {
+      const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-GB', options);
+    },
   },
   mounted() {
     this.fetchData();
