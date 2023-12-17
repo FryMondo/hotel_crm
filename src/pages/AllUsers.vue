@@ -2,6 +2,12 @@
   <div class="main-btn">
     <button @click="$router.push('/')">На головну сторінку</button>
   </div>
+  <div class="main-btn">
+    <button>Змінити роль</button>
+  </div>
+  <div class="main-btn">
+    <button>Видалити користувача</button>
+  </div>
   <table id="data-table">
     <thead>
     <tr>
