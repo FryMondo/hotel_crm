@@ -22,6 +22,8 @@ const get_userRole = require('./serverParts/Get_userRole');
 const get_reserved = require('./serverParts/Get_reserved');
 const get_allUsers = require('./serverParts/Get_allUsers');
 
+const update_roles = require('./serverParts/Update_roles');
+
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -56,6 +58,8 @@ app.get('/getUserRole', get_userRole);
 app.get('/getReserved', get_reserved);
 
 app.get('/getAllUsers', get_allUsers);
+
+app.post('/updateRoles', update_roles);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

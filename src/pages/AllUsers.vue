@@ -3,7 +3,7 @@
     <button @click="$router.push('/')">На головну сторінку</button>
   </div>
   <div class="main-btn">
-    <button>Змінити роль</button>
+    <button @click="changeRoles">Змінити роль</button>
   </div>
   <div class="main-btn">
     <button>Видалити користувача</button>
@@ -23,7 +23,7 @@
     <tbody>
     <tr v-for="user in users" :key="user.username">
       <td>
-        <input type="checkbox" v-model="selectedUsers" :value="user.username" />
+        <input type="checkbox" v-model="selectedUsers" :value="user.username"/>
       </td>
       <td>{{ user.email }}</td>
       <td>{{ user.username }}</td>
@@ -38,7 +38,7 @@
 
 <script>
 export default {
-  data(){
+  data() {
     return {
       users: [],
       selectedUsers: []
@@ -58,9 +58,36 @@ export default {
         console.error('Error fetching data:', error);
       }
     },
+    async changeRoles() {
+      if (this.selectedUsers.length === 0) {
+        console.log('Виберіть хоча б одного користувача');
+        return;
+      }
+      try {
+        const response = await fetch('http://localhost:3000/updateRoles', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            users: this.selectedUsers,
+          }),
+        });
+
+        if (response.ok) {
+          console.log('Ролі успішно змінені');
+          this.fetchAllUsers();
+        } else {
+          console.error('Помилка при зміні ролей');
+        }
+      } catch (error) {
+        console.error('Помилка при виконанні запиту:', error);
+      }
+    },
   },
   mounted() {
-    this.fetchAllUsers()
+    this.fetchAllUsers();
+    this.changeRoles();
   }
 }
 </script>
