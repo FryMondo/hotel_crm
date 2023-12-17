@@ -7,6 +7,7 @@ import ReservationPage from "@/pages/ReservationPage.vue";
 import RoomsPage from "@/pages/RoomsPage.vue";
 import AdditionalInfo from "@/pages/AdditionalInfo.vue";
 import ReservedRooms from "@/pages/ReservedRooms.vue";
+import AllUsers from "@/pages/AllUsers.vue";
 
 const routes = [
     {
@@ -40,6 +41,10 @@ const routes = [
     {
         path: '/reserved',
         component: ReservedRooms
+    },
+    {
+        path: '/allUsers',
+        component: AllUsers
     }
 ];
 
