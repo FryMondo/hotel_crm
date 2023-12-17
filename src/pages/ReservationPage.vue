@@ -39,6 +39,13 @@
 </template>
 
 <script>
+import {
+  validateStartDate,
+  validateEndDate,
+  validateSelectedRoom,
+  validateNumberOfPeople
+} from "@/pages/validation/allValidation";
+
 export default {
   data() {
     return {
@@ -116,61 +123,19 @@ export default {
       }
     },
     validateStartDate() {
-      const selectedDate = new Date(this.startDate);
-      const today = new Date();
-
-      if (!this.startDate) {
-        this.errors.startDate = '(!) Заповніть початок бронювання';
-        return false;
-      } else if (selectedDate < today) {
-        this.errors.startDate = '(!) Не можна обрати минулий час';
-        return false;
-      } else if (selectedDate > new Date('2026-01-01')) {
-        this.errors.startDate = '(!) Максимальна дата 01.01.2026';
-        return false;
-      } else {
-        this.errors.startDate = '';
-        return true;
-      }
+      return validateStartDate(this.startDate, this.endDate, this.errors);
     },
+
     validateEndDate() {
-      const selectedDate = new Date(this.endDate);
-      const start = new Date(this.startDate);
-      const today = new Date();
-
-      if (!this.endDate) {
-        this.errors.endDate = '(!) Заповніть кінець бронювання';
-        return false;
-      } else if (selectedDate < today) {
-        this.errors.endDate = '(!) Не можна обрати минулий час';
-        return false;
-      } else if (selectedDate > new Date('2026-01-01')) {
-        this.errors.endDate = '(!) Максимальна дата 01.01.2026';
-        return false;
-      } else if (selectedDate < start) {
-        this.errors.endDate = '(!) Не можна обрати дату перед початком бронювання';
-        return false;
-      } else {
-        this.errors.endDate = '';
-        return true;
-      }
+      return validateEndDate(this.startDate, this.endDate, this.errors);
     },
+
     validateSelectedRoom() {
-      if (!this.selectedRoom) {
-        this.errors.selectedRoom = "(!) Оберіть кімнату"
-        return false;
-      } else {
-        return true;
-      }
+      return validateSelectedRoom(this.selectedRoom, this.errors);
     },
-    validateNumberOfPeople() {
-      if (!this.numberOfPeople) {
-        this.errors.numberOfPeople = "(!) Оберіть кількість людей"
-        return false;
-      } else {
-        return true;
-      }
 
+    validateNumberOfPeople() {
+      return validateNumberOfPeople(this.numberOfPeople, this.errors);
     },
     updateNumberOfPeople() {
       const selectedRoom = this.roomList.find(room => room.roomNumber === this.selectedRoom);
@@ -197,5 +162,4 @@ export default {
 }
 </script>
 
-<style scoped src="./styles/ReserveStyle.css">
-</style>
+<style scoped src="./styles/ReserveStyle.css"></style>

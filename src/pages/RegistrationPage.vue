@@ -25,6 +25,12 @@
 </template>
 
 <script>
+import {
+  validateEmail,
+  validatePassword,
+  validateUsername
+} from "@/pages/validation/allValidation";
+
 export default {
   data() {
     return {
@@ -66,50 +72,13 @@ export default {
       delete this.errors[errorID];
     },
     validateEmail() {
-      if (!this.email.trim()) {
-        this.errors.email = '(!) Заповніть поле Email';
-        return false;
-      } else if (!this.RegExpEmail(this.email)) {
-        this.errors.email = '(!) Невірний формат Email';
-        return false;
-      } else {
-        return true;
-      }
-    },
-    RegExpEmail(email) {
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      return emailPattern.test(email);
+      return validateEmail(this.email, this.errors);
     },
     validatePassword() {
-      if (!this.password.trim()) {
-        this.errors.password = '(!) Заповніть поле Пароль';
-        return false;
-      } else if (this.password.trim().length < 8) {
-        this.errors.password = '(!) Пароль повинен містити мінімум 8 символів';
-        return false;
-      } else if (/\s/.test(this.password)) {
-        this.errors.password = '(!) Пароль не повинен містити пробіли';
-        return false;
-      } else if (!/[a-zа-яёіїє]/.test(this.password)) {
-        this.errors.password = '(!) Пароль повинен містити 1 маленьку літеру';
-        return false;
-      } else if (!/[A-ZА-ЯЁІЇЄ]/.test(this.password)) {
-        this.errors.password = '(!) Пароль повинен містити 1 велику літеру';
-        return false;
-      } else {
-        return true;
-      }
+      return validatePassword(this.password, this.errors);
     },
     validateUsername() {
-      if (!this.username.trim()) {
-        this.errors.username = '(!) Заповніть поле Username';
-        return false;
-      } else if (this.username.trim().length < 3) {
-        this.errors.username = '(!) Username повинен мати хоча б 3 символи';
-        return false;
-      } else {
-        return true;
-      }
+      return validateUsername(this.username, this.errors);
     },
   },
 };

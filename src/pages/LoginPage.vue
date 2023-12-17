@@ -24,6 +24,10 @@
 
 <script>
 import axios from "axios";
+import {
+  validateEmail,
+  validatePassword
+} from "@/pages/validation/allValidation";
 
 export default {
   data() {
@@ -60,39 +64,10 @@ export default {
       delete this.errors[errorID];
     },
     validateEmail() {
-      if (!this.form.email.trim()) {
-        this.errors.email = '(!) Заповніть поле Email';
-        return false;
-      } else if (!this.RegExpEmail(this.form.email)) {
-        this.errors.email = '(!) Невірний формат Email';
-        return false;
-      } else {
-        return true;
-      }
-    },
-    RegExpEmail(email) {
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      return emailPattern.test(email);
+      return validateEmail(this.form.email, this.errors);
     },
     validatePassword() {
-      if (!this.form.password.trim()) {
-        this.errors.password = '(!) Заповніть поле Пароль';
-        return false;
-      } else if (this.form.password.trim().length < 8) {
-        this.errors.password = '(!) Пароль повинен містити мінімум 8 символів';
-        return false;
-      } else if (/\s/.test(this.form.password)) {
-        this.errors.password = '(!) Пароль не повинен містити пробіли';
-        return false;
-      } else if (!/[a-zа-яёіїє]/.test(this.form.password)) {
-        this.errors.password = '(!) Пароль повинен містити 1 маленьку літеру';
-        return false;
-      } else if (!/[A-ZА-ЯЁІЇЄ]/.test(this.form.password)) {
-        this.errors.password = '(!) Пароль повинен містити 1 велику літеру';
-        return false;
-      } else {
-        return true;
-      }
+      return validatePassword(this.form.password, this.errors);
     },
   },
 };
