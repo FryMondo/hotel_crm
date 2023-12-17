@@ -4,13 +4,11 @@
     <form @submit.prevent="reserveRoom">
       <h2>Бронювання номеру</h2>
       <div class="input-box">
-
         <input v-model="startDate" @input="clearError('startDate')" type="date" :min="minStartDate">
         <label>Початок бронювання:</label>
         <div class="error-message">{{ errors.startDate }}</div>
       </div>
       <div class="input-box">
-
         <input v-model="endDate" @input="clearError('endDate')" type="date" :min="minEndDate">
         <label>Кінець бронювання:</label>
         <div class="error-message">{{ errors.endDate }}</div>
@@ -22,7 +20,6 @@
             {{ room.roomNumber }}
           </option>
         </select>
-
         <div class="error-message">{{ errors.selectedRoom }}</div>
       </div>
       <div class="input-select">
@@ -32,7 +29,6 @@
             {{ count }}
           </option>
         </select>
-
         <div class="error-message">{{ errors.numberOfPeople }}</div>
       </div>
       <button type="submit">Забронювати</button>
