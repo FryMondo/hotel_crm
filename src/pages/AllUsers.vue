@@ -5,6 +5,7 @@
   <table id="data-table">
     <thead>
     <tr>
+      <th>Вибрати</th>
       <th>Email</th>
       <th>Username</th>
       <th>Роль</th>
@@ -15,6 +16,9 @@
     </thead>
     <tbody>
     <tr v-for="user in users" :key="user.username">
+      <td>
+        <input type="checkbox" v-model="selectedUsers" :value="user.username" />
+      </td>
       <td>{{ user.email }}</td>
       <td>{{ user.username }}</td>
       <td>{{ user.role }}</td>
@@ -30,7 +34,8 @@
 export default {
   data(){
     return {
-      users: []
+      users: [],
+      selectedUsers: []
     }
   },
   methods: {
