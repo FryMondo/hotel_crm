@@ -26,6 +26,7 @@ const get_existing = require('./serverParts/Get_ifInfoExist');
 
 const update_roles = require('./serverParts/Update_roles');
 const update_reservation = require('./serverParts/Update_reservedRooms');
+const update_userInfo = require('./serverParts/Update_userInfo');
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -69,6 +70,8 @@ app.get('/getReservedInfo', get_reservedInfo);
 app.post('/updateReservation', update_reservation);
 
 app.get('/checkUserInfo', get_existing);
+
+app.post('/updateUserInfo', update_userInfo);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

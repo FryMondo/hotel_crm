@@ -1,7 +1,7 @@
 <template>
   <body>
   <div class="form-box">
-    <form>
+    <form @submit.prevent>
       <h2>Додаткова інформація</h2>
       <div class="input-box">
         <input v-model="phone" v-imask="'+{38}(\\000) 000-00-00'" type="text"
@@ -19,8 +19,8 @@
         <label>Ім'я:</label>
         <div class="error-message" id="first-name-error">{{ errors.firstName }}</div>
       </div>
-      <button v-if="hasUserInfo">Оновити інформацію</button>
-      <button v-else @click="addInfo">Додати інформацію</button>
+      <button v-if="hasUserInfo" type="submit" @click="updateInfo">Оновити інформацію</button>
+      <button v-else type="submit" @click="addInfo">Додати інформацію</button>
       <button @click="$router.push('/')">Повернутися на головну сторінку</button>
     </form>
   </div>
@@ -87,6 +87,32 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+      }
+    },
+    async updateInfo() {
+      const username = localStorage.getItem('username');
+      if (!username || !this.validatePhone() || !this.validateSurname() || !this.validateFirstName()) {
+        return;
+      }
+      const response = await fetch('http://localhost:3000/updateUserInfo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username,
+          firstName: this.firstName,
+          surname: this.surname,
+          phone: this.phone
+        })
+      });
+      this.firstName = '';
+      this.surname = '';
+      this.phone = '';
+      if (response.ok) {
+        console.log('User info updated successfully');
+      } else {
+        console.error('Failed to update user info');
       }
     },
     validateSurname() {
