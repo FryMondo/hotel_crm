@@ -93,7 +93,7 @@ export function validateEmail(email, errors) {
     if (!email.trim()) {
         errors.email = '(!) Заповніть поле Email';
         return false;
-    } else if (!this.RegExpEmail(email)) {
+    } else if (!RegExpEmail(email)) {
         errors.email = '(!) Невірний формат Email';
         return false;
     } else {
@@ -101,7 +101,7 @@ export function validateEmail(email, errors) {
     }
 }
 
-export function RegExpEmail(email) {
+function RegExpEmail(email) {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailPattern.test(email);
 }
