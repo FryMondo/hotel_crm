@@ -22,6 +22,7 @@ const get_userRole = require('./serverParts/Get_userRole');
 const get_reserved = require('./serverParts/Get_reserved');
 const get_allUsers = require('./serverParts/Get_allUsers');
 const get_reservedInfo = require('./serverParts/Get_reservedInfo');
+const get_existing = require('./serverParts/Get_ifInfoExist');
 
 const update_roles = require('./serverParts/Update_roles');
 const update_reservation = require('./serverParts/Update_reservedRooms');
@@ -66,6 +67,8 @@ app.post('/updateRoles', update_roles);
 app.get('/getReservedInfo', get_reservedInfo);
 
 app.post('/updateReservation', update_reservation);
+
+app.get('/checkUserInfo', get_existing);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
