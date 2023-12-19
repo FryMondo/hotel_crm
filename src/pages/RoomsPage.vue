@@ -2,6 +2,9 @@
   <div class="main-btn">
     <button @click="$router.push('/')">На головну сторінку</button>
   </div>
+  <div class="main-btn">
+    <button @click="deleteRooms">Видалити кімнату</button>
+  </div>
   <div class="title">
     <h1>НОМЕРА В ГОТЕЛІ:</h1>
   </div>
@@ -49,6 +52,7 @@
   <table id="data-table">
     <thead>
     <tr>
+      <th>Вибрати</th>
       <th>Номер кімнати</th>
       <th>Кількість кімнат</th>
       <th>Площа номеру</th>
@@ -60,6 +64,9 @@
     </thead>
     <tbody>
     <tr v-for="room in rooms" :key="room.roomNumber">
+      <td>
+        <input type="checkbox" v-model="selectedRooms" :value="room.roomNumber"/>
+      </td>
       <td>{{ room.roomNumber }}</td>
       <td>{{ room.numberOfRooms }}</td>
       <td>{{ room.roomArea }} м^3</td>
@@ -97,7 +104,8 @@ export default {
       errors: {},
       isAdmin: false,
       role: '',
-      isUpdate: false
+      isUpdate: false,
+      selectedRooms: []
     }
   },
   methods: {
@@ -217,6 +225,34 @@ export default {
         this.roomCost = null;
       } catch (error) {
         console.error('Error:', error);
+      }
+    },
+    async deleteRooms() {
+      if (this.selectedRooms.length === 0) {
+        return;
+      }
+      const confirmed = window.confirm('Ви впевнені, що хочете видалити обрані кімнати?');
+      if (!confirmed) {
+        return;
+      }
+      try {
+        const response = await fetch('http://localhost:3000/deleteRooms', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            roomNumbers: this.selectedRooms,
+          }),
+        });
+        if (response.ok) {
+          await this.fetchData();
+          console.log('Rooms deleted successfully');
+        } else {
+          console.error('Failed to delete rooms');
+        }
+      } catch (error) {
+        console.error('Error deleting rooms:', error);
       }
     },
     validateRoomNumber() {
