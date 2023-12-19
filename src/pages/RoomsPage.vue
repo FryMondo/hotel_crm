@@ -103,7 +103,7 @@ export default {
   methods: {
     async submitForm() {
       if (this.isUpdate) {
-        // await this.updateInformation();
+        await this.updateInformation();
       } else {
         await this.addInformation();
       }
@@ -183,6 +183,40 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching data:', error);
+      }
+    },
+    async updateInformation() {
+      if (!this.validateNumberOfRooms() || !this.validateRoomArea()
+          || !this.validatePlacesInRoom() || !this.validateRoomType() || !this.validateRoomCost()
+          || !this.validateDescription()) {
+        return;
+      }
+      try {
+        const response = await fetch('http://localhost:3000/updateRoomInfo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            roomNumber: this.roomNumber,
+            numberOfRooms: this.numberOfRooms,
+            roomArea: this.roomArea,
+            placesInRoom: this.placesInRoom,
+            description: this.description,
+            roomType: this.roomType,
+            roomCost: this.roomCost
+          }),
+        });
+        await this.fetchData();
+        this.roomNumber = null;
+        this.numberOfRooms = null;
+        this.roomArea = null;
+        this.placesInRoom = null;
+        this.description = '';
+        this.roomType = null;
+        this.roomCost = null;
+      } catch (error) {
+        console.error('Error:', error);
       }
     },
     validateRoomNumber() {
