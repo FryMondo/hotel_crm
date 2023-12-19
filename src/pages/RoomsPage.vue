@@ -6,8 +6,8 @@
     <h1>НОМЕРА В ГОТЕЛІ:</h1>
   </div>
   <div class="form-box" v-if="isAdmin">
-    <form @submit.prevent="addInformation">
-      <h2>Додати номер в готель: </h2>
+    <form @submit.prevent="submitForm">
+      <h2>{{ formTitle }}</h2>
       <div class="input-box">
         <input v-model="roomNumber" @input="clearError('roomNumber')" type="number" min="1" max="150">
         <label>Номер кімнати: </label>
@@ -43,7 +43,7 @@
         <label>Опис номеру: </label>
         <div class="error-message">{{ errors.description }}</div>
       </div>
-      <button type="submit">Додати інформацію</button>
+      <button type="submit">{{ submitButtonLabel }}</button>
     </form>
   </div>
   <table id="data-table">
@@ -96,10 +96,18 @@ export default {
       rooms: [],
       errors: {},
       isAdmin: false,
-      role: ''
+      role: '',
+      isUpdate: false
     }
   },
   methods: {
+    async submitForm() {
+      if (this.isUpdate) {
+        // await this.updateInformation();
+      } else {
+        await this.addInformation();
+      }
+    },
     clearError(errorID) {
       delete this.errors[errorID];
     },
@@ -164,6 +172,19 @@ export default {
         console.error('Error fetching data:', error);
       }
     },
+    async checkRoomNumber() {
+      try {
+        const response = await fetch(`http://localhost:3000/checkRoomNumber?roomNumber=${this.roomNumber}`);
+        if (response.ok) {
+          const result = await response.json();
+          this.isUpdate = result.exists;
+        } else {
+          console.error('Server response not OK');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
     validateRoomNumber() {
       return validateRoomNumber(this.rooms, this.roomNumber, this.errors);
     },
@@ -189,7 +210,20 @@ export default {
   mounted() {
     this.fetchData();
     this.fetchUserRole();
-  }
+  },
+  computed: {
+    formTitle() {
+      return this.isUpdate ? 'Оновити інформацію' : 'Додати номер в готель';
+    },
+    submitButtonLabel() {
+      return this.isUpdate ? 'Оновити інформацію' : 'Додати інформацію';
+    },
+  },
+  watch: {
+    roomNumber() {
+      this.checkRoomNumber();
+    },
+  },
 }
 </script>
 
