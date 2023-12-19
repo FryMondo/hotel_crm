@@ -103,7 +103,7 @@ export default {
           }),
         });
         if (response.ok) {
-          this.fetchAllUsers();
+          await this.fetchAllUsers();
           console.log('Users deleted successfully');
         } else {
           console.error('Failed to delete users');
