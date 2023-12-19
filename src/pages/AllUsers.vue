@@ -6,7 +6,7 @@
     <button @click="changeRoles">Змінити роль</button>
   </div>
   <div class="main-btn">
-    <button>Видалити користувача</button>
+    <button @click="deleteUsers">Видалити користувача</button>
   </div>
   <table id="data-table">
     <thead>
@@ -82,6 +82,34 @@ export default {
         }
       } catch (error) {
         console.error('Помилка при виконанні запиту:', error);
+      }
+    },
+    async deleteUsers() {
+      if (this.selectedUsers.length === 0) {
+        return;
+      }
+      const confirmed = window.confirm('Ви впевнені, що хочете видалити обрані користувачі?');
+      if (!confirmed) {
+        return;
+      }
+      try {
+        const response = await fetch('http://localhost:3000/deleteUsers', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            usernames: this.selectedUsers,
+          }),
+        });
+        if (response.ok) {
+          this.fetchAllUsers();
+          console.log('Users deleted successfully');
+        } else {
+          console.error('Failed to delete users');
+        }
+      } catch (error) {
+        console.error('Error deleting users:', error);
       }
     },
   },

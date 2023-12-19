@@ -30,6 +30,8 @@ const update_reservation = require('./serverParts/Update_reservedRooms');
 const update_userInfo = require('./serverParts/Update_userInfo');
 const update_roomInfo = require('./serverParts/Update_roomInfo');
 
+const delete_user = require('./serverParts/Delete_user');
+
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -78,6 +80,8 @@ app.post('/updateUserInfo', update_userInfo);
 app.get('/checkRoomNumber', get_roomNumber);
 
 app.post('/updateRoomInfo', update_roomInfo);
+
+app.post('/deleteUsers', delete_user);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
