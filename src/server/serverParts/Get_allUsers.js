@@ -1,9 +1,9 @@
 const db = require('../database');
 
 module.exports = (req, res) => {
-    const {username} = req.query;
+  const { username } = req.query;
 
-    const sql = `
+  const sql = `
         SELECT u.email,
                u.username,
                r.role,
@@ -16,12 +16,12 @@ module.exports = (req, res) => {
         WHERE u.username <> ?
     `;
 
-    db.query(sql, [username], (err, result) => {
-        if (err) {
-            console.log('Error executing query:', err);
-            res.status(500).send('Error getting users');
-            return;
-        }
-        res.status(200).json(result);
-    });
+  db.query(sql, [username], (err, result) => {
+    if (err) {
+      console.log('Error executing query:', err);
+      res.status(500).send('Error getting users');
+      return;
+    }
+    res.status(200).json(result);
+  });
 };

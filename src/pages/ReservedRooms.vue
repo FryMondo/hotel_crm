@@ -8,7 +8,11 @@
       <div class="input-select">
         <label>Номер кімнати</label>
         <select v-model="selectedRoom" @change="handleRoomChange">
-          <option v-for="room in reserved" :key="room.roomNumberID" :value="room.roomNumberID">
+          <option
+            v-for="room in reserved"
+            :key="room.roomNumberID"
+            :value="room.roomNumberID"
+          >
             {{ room.roomNumberID }}
           </option>
         </select>
@@ -17,19 +21,33 @@
       <div class="input-select">
         <label>Кількість людей в кімнаті</label>
         <select v-model="numberOfPeople" @change="clearError('numberOfPeople')">
-          <option v-for="count in peopleCountOptions" :key="count" :value="count">
+          <option
+            v-for="count in peopleCountOptions"
+            :key="count"
+            :value="count"
+          >
             {{ count }}
           </option>
         </select>
         <div class="error-message">{{ errors.numberOfPeople }}</div>
       </div>
       <div class="input-box">
-        <input v-model="startDate" @input="clearError('startDate')" type="date" :min="minStartDate">
+        <input
+          v-model="startDate"
+          @input="clearError('startDate')"
+          type="date"
+          :min="minStartDate"
+        />
         <label>Початок бронювання</label>
         <div class="error-message">{{ errors.startDate }}</div>
       </div>
       <div class="input-box">
-        <input v-model="endDate" @input="clearError('endDate')" type="date" :min="minEndDate">
+        <input
+          v-model="endDate"
+          @input="clearError('endDate')"
+          type="date"
+          :min="minEndDate"
+        />
         <label>Кінець бронювання</label>
         <div class="error-message">{{ errors.endDate }}</div>
       </div>
@@ -38,20 +56,20 @@
   </div>
   <table id="data-table">
     <thead>
-    <tr>
-      <th>Початок бронювання</th>
-      <th>Кінець бронювання</th>
-      <th>Кількість людей</th>
-      <th>Номер кімнати</th>
-    </tr>
+      <tr>
+        <th>Початок бронювання</th>
+        <th>Кінець бронювання</th>
+        <th>Кількість людей</th>
+        <th>Номер кімнати</th>
+      </tr>
     </thead>
     <tbody>
-    <tr v-for="room in reserved" :key="room.roomNumber">
-      <td>{{ formatDate(room.startDate) }}</td>
-      <td>{{ formatDate(room.endDate) }}</td>
-      <td>{{ room.numberOfPeople }}</td>
-      <td>{{ room.roomNumberID }}</td>
-    </tr>
+      <tr v-for="room in reserved" :key="room.roomNumber">
+        <td>{{ formatDate(room.startDate) }}</td>
+        <td>{{ formatDate(room.endDate) }}</td>
+        <td>{{ room.numberOfPeople }}</td>
+        <td>{{ room.roomNumberID }}</td>
+      </tr>
     </tbody>
   </table>
 </template>
@@ -61,8 +79,8 @@ import {
   validateEndDate,
   validateNumberOfPeople,
   validateSelectedRoom,
-  validateStartDate
-} from "@/pages/validation/allValidation";
+  validateStartDate,
+} from '@/pages/validation/allValidation';
 
 export default {
   data() {
@@ -75,13 +93,15 @@ export default {
       roomList: [],
       peopleCountOptions: [],
       errors: {},
-    }
+    };
   },
   methods: {
     async fetchReservedData() {
       const usernameID = localStorage.getItem('username');
       try {
-        const response = await fetch(`http://localhost:3000/getReserved?usernameID=${usernameID}`);
+        const response = await fetch(
+          `http://localhost:3000/getReserved?usernameID=${usernameID}`
+        );
         if (response.ok) {
           this.reserved = await response.json();
         } else {
@@ -93,22 +113,29 @@ export default {
     },
     async changeReserve() {
       try {
-        if (!this.validateStartDate() || !this.validateEndDate() || !this.validateSelectedRoom()
-            || !this.validateNumberOfPeople()) {
+        if (
+          !this.validateStartDate() ||
+          !this.validateEndDate() ||
+          !this.validateSelectedRoom() ||
+          !this.validateNumberOfPeople()
+        ) {
           return;
         }
-        const responseAddInfo = await fetch('http://localhost:3000/updateReservation', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            startDate: this.startDate,
-            endDate: this.endDate,
-            roomNumberID: this.selectedRoom,
-            numberOfPeople: this.numberOfPeople
-          }),
-        });
+        const responseAddInfo = await fetch(
+          'http://localhost:3000/updateReservation',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              startDate: this.startDate,
+              endDate: this.endDate,
+              roomNumberID: this.selectedRoom,
+              numberOfPeople: this.numberOfPeople,
+            }),
+          }
+        );
         this.startDate = '';
         this.endDate = '';
         this.selectedRoom = '';
@@ -131,7 +158,7 @@ export default {
       }
     },
     formatDate(dateString) {
-      const options = {day: 'numeric', month: 'numeric', year: 'numeric'};
+      const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
       return new Date(dateString).toLocaleDateString('en-GB', options);
     },
     clearError(errorID) {
@@ -154,10 +181,14 @@ export default {
       return validateNumberOfPeople(this.numberOfPeople, this.errors);
     },
     updateNumberOfPeople() {
-      const selectedRoom = this.roomList.find(room => room.roomNumberID === this.selectedRoom);
+      const selectedRoom = this.roomList.find(
+        (room) => room.roomNumberID === this.selectedRoom
+      );
       if (selectedRoom) {
-        this.peopleCountOptions = Array.from({length: selectedRoom.placesInRoom},
-            (_, index) => index + 1);
+        this.peopleCountOptions = Array.from(
+          { length: selectedRoom.placesInRoom },
+          (_, index) => index + 1
+        );
         this.numberOfPeople = 1;
       }
     },
@@ -174,10 +205,8 @@ export default {
     minEndDate() {
       return this.startDate;
     },
-  }
-}
+  },
+};
 </script>
 
-<style scoped src="./styles/ReservedStyles.css">
-
-</style>
+<style scoped src="./styles/ReservedStyles.css"></style>

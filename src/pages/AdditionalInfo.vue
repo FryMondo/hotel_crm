@@ -1,39 +1,56 @@
 <template>
   <body>
-  <div class="form-box">
-    <form @submit.prevent>
-      <h2>Додаткова інформація</h2>
-      <div class="input-box">
-        <input v-model="phone" v-imask="'+{38}(\\000) 000-00-00'" type="text"
-               @input="clearError('phone')" placeholder="+38(0__) ___-__-__">
-        <label>Номер телефону:</label>
-        <div class="error-message" id="phone-error">{{ errors.phone }}</div>
-      </div>
-      <div class="input-box">
-        <input v-model="surname" @input="clearError('surname')" type="text">
-        <label>Прізвище:</label>
-        <div class="error-message" id="surname-error">{{ errors.surname }}</div>
-      </div>
-      <div class="input-box">
-        <input v-model="firstName" @input="clearError('firstName')" type="text">
-        <label>Ім'я:</label>
-        <div class="error-message" id="first-name-error">{{ errors.firstName }}</div>
-      </div>
-      <button v-if="hasUserInfo" type="submit" @click="updateInfo">Оновити інформацію</button>
-      <button v-else type="submit" @click="addInfo">Додати інформацію</button>
-      <button @click="$router.push('/')">Повернутися на головну сторінку</button>
-    </form>
-  </div>
+    <div class="form-box">
+      <form @submit.prevent>
+        <h2>Додаткова інформація</h2>
+        <div class="input-box">
+          <input
+            v-model="phone"
+            v-imask="'+{38}(\\000) 000-00-00'"
+            type="text"
+            @input="clearError('phone')"
+            placeholder="+38(0__) ___-__-__"
+          />
+          <label>Номер телефону:</label>
+          <div class="error-message" id="phone-error">{{ errors.phone }}</div>
+        </div>
+        <div class="input-box">
+          <input v-model="surname" @input="clearError('surname')" type="text" />
+          <label>Прізвище:</label>
+          <div class="error-message" id="surname-error">
+            {{ errors.surname }}
+          </div>
+        </div>
+        <div class="input-box">
+          <input
+            v-model="firstName"
+            @input="clearError('firstName')"
+            type="text"
+          />
+          <label>Ім'я:</label>
+          <div class="error-message" id="first-name-error">
+            {{ errors.firstName }}
+          </div>
+        </div>
+        <button v-if="hasUserInfo" type="submit" @click="updateInfo">
+          Оновити інформацію
+        </button>
+        <button v-else type="submit" @click="addInfo">Додати інформацію</button>
+        <button @click="$router.push('/')">
+          Повернутися на головну сторінку
+        </button>
+      </form>
+    </div>
   </body>
 </template>
 
 <script>
-import {IMaskDirective} from "vue-imask";
+import { IMaskDirective } from 'vue-imask';
 import {
   validateSurname,
   validateFirstName,
-  validatePhone
-} from "@/pages/validation/allValidation";
+  validatePhone,
+} from '@/pages/validation/allValidation';
 
 export default {
   data() {
@@ -42,8 +59,8 @@ export default {
       surname: '',
       firstName: '',
       errors: {},
-      hasUserInfo: false
-    }
+      hasUserInfo: false,
+    };
   },
   methods: {
     clearError(errorID) {
@@ -51,20 +68,25 @@ export default {
     },
     async addInfo() {
       const username = localStorage.getItem('username');
-      if (!username || !this.validatePhone() || !this.validateSurname() || !this.validateFirstName()) {
+      if (
+        !username ||
+        !this.validatePhone() ||
+        !this.validateSurname() ||
+        !this.validateFirstName()
+      ) {
         return;
       }
       const response = await fetch('http://localhost:3000/addInfo', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           username: username,
           firstName: this.firstName,
           surname: this.surname,
-          phone: this.phone
-        })
+          phone: this.phone,
+        }),
       });
       this.firstName = '';
       this.surname = '';
@@ -78,7 +100,9 @@ export default {
     async checkUserInfo() {
       const username = localStorage.getItem('username');
       try {
-        const response = await fetch(`http://localhost:3000/checkUserInfo?username=${username}`);
+        const response = await fetch(
+          `http://localhost:3000/checkUserInfo?username=${username}`
+        );
         if (response.ok) {
           const result = await response.json();
           this.hasUserInfo = result.hasUserInfo;
@@ -91,20 +115,25 @@ export default {
     },
     async updateInfo() {
       const username = localStorage.getItem('username');
-      if (!username || !this.validatePhone() || !this.validateSurname() || !this.validateFirstName()) {
+      if (
+        !username ||
+        !this.validatePhone() ||
+        !this.validateSurname() ||
+        !this.validateFirstName()
+      ) {
         return;
       }
       const response = await fetch('http://localhost:3000/updateUserInfo', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           username: username,
           firstName: this.firstName,
           surname: this.surname,
-          phone: this.phone
-        })
+          phone: this.phone,
+        }),
       });
       this.firstName = '';
       this.surname = '';
@@ -129,10 +158,9 @@ export default {
     this.checkUserInfo();
   },
   directives: {
-    imask: IMaskDirective
-  }
-}
+    imask: IMaskDirective,
+  },
+};
 </script>
 
-<style scoped src="./styles/AddInfoStyle.css">
-</style>
+<style scoped src="./styles/AddInfoStyle.css"></style>

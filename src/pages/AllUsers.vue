@@ -10,28 +10,32 @@
   </div>
   <table id="data-table">
     <thead>
-    <tr>
-      <th>Вибрати</th>
-      <th>Email</th>
-      <th>Username</th>
-      <th>Роль</th>
-      <th>Телефон</th>
-      <th>Прізвище</th>
-      <th>Ім'я</th>
-    </tr>
+      <tr>
+        <th>Вибрати</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Роль</th>
+        <th>Телефон</th>
+        <th>Прізвище</th>
+        <th>Ім'я</th>
+      </tr>
     </thead>
     <tbody>
-    <tr v-for="user in users" :key="user.username">
-      <td>
-        <input type="checkbox" v-model="selectedUsers" :value="user.username"/>
-      </td>
-      <td>{{ user.email }}</td>
-      <td>{{ user.username }}</td>
-      <td>{{ user.role }}</td>
-      <td>{{ user.phone || 'Порожньо' }}</td>
-      <td>{{ user.surname || 'Порожньо' }}</td>
-      <td>{{ user.firstName || 'Порожньо' }}</td>
-    </tr>
+      <tr v-for="user in users" :key="user.username">
+        <td>
+          <input
+            type="checkbox"
+            v-model="selectedUsers"
+            :value="user.username"
+          />
+        </td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.role }}</td>
+        <td>{{ user.phone || 'Порожньо' }}</td>
+        <td>{{ user.surname || 'Порожньо' }}</td>
+        <td>{{ user.firstName || 'Порожньо' }}</td>
+      </tr>
     </tbody>
   </table>
 </template>
@@ -41,14 +45,16 @@ export default {
   data() {
     return {
       users: [],
-      selectedUsers: []
-    }
+      selectedUsers: [],
+    };
   },
   methods: {
     async fetchAllUsers() {
       const username = localStorage.getItem('username');
       try {
-        const response = await fetch(`http://localhost:3000/getAllUsers?username=${username}`);
+        const response = await fetch(
+          `http://localhost:3000/getAllUsers?username=${username}`
+        );
         if (response.ok) {
           this.users = await response.json();
         } else {
@@ -88,7 +94,9 @@ export default {
       if (this.selectedUsers.length === 0) {
         return;
       }
-      const confirmed = window.confirm('Ви впевнені, що хочете видалити обрані користувачі?');
+      const confirmed = window.confirm(
+        'Ви впевнені, що хочете видалити обрані користувачі?'
+      );
       if (!confirmed) {
         return;
       }
@@ -116,8 +124,8 @@ export default {
   mounted() {
     this.fetchAllUsers();
     this.changeRoles();
-  }
-}
+  },
+};
 </script>
 
 <style scoped src="./styles/AllUsersStyles.css"></style>

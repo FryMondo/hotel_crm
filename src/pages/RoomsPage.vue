@@ -12,37 +12,71 @@
     <form @submit.prevent="submitForm">
       <h2>{{ formTitle }}</h2>
       <div class="input-box">
-        <input v-model="roomNumber" @input="clearError('roomNumber')" type="number" min="1" max="150">
+        <input
+          v-model="roomNumber"
+          @input="clearError('roomNumber')"
+          type="number"
+          min="1"
+          max="150"
+        />
         <label>Номер кімнати: </label>
         <div class="error-message">{{ errors.roomNumber }}</div>
       </div>
       <div class="input-box">
-        <input v-model="numberOfRooms" @input="clearError('numberOfRooms')" type="number" min="1" max="6">
+        <input
+          v-model="numberOfRooms"
+          @input="clearError('numberOfRooms')"
+          type="number"
+          min="1"
+          max="6"
+        />
         <label>Кількість кімнат: </label>
         <div class="error-message">{{ errors.numberOfRooms }}</div>
       </div>
       <div class="input-box">
-        <input v-model="roomArea" @input="clearError('roomArea')" type="number" min="25" max="70">
+        <input
+          v-model="roomArea"
+          @input="clearError('roomArea')"
+          type="number"
+          min="25"
+          max="70"
+        />
         <label>Площа кімнати: </label>
         <div class="error-message">{{ errors.roomArea }}</div>
       </div>
       <div class="input-box">
-        <input v-model="placesInRoom" @input="clearError('placesInRoom')" type="number" min="1" max="5">
+        <input
+          v-model="placesInRoom"
+          @input="clearError('placesInRoom')"
+          type="number"
+          min="1"
+          max="5"
+        />
         <label>Кількість місць в номері: </label>
         <div class="error-message">{{ errors.placesInRoom }}</div>
       </div>
       <div class="input-box">
-        <input v-model="roomType" @input="clearError('roomType')" type="text">
+        <input v-model="roomType" @input="clearError('roomType')" type="text" />
         <label>Тип номеру: </label>
         <div class="error-message">{{ errors.roomType }}</div>
       </div>
       <div class="input-box">
-        <input v-model="roomCost" @input="clearError('roomCost')" type="number" min="250" max="10000">
+        <input
+          v-model="roomCost"
+          @input="clearError('roomCost')"
+          type="number"
+          min="250"
+          max="10000"
+        />
         <label>Ціна кімнати: </label>
         <div class="error-message">{{ errors.roomCost }}</div>
       </div>
       <div class="input-box">
-        <input v-model="description" @input="clearError('description')" type="text">
+        <input
+          v-model="description"
+          @input="clearError('description')"
+          type="text"
+        />
         <label>Опис номеру: </label>
         <div class="error-message">{{ errors.description }}</div>
       </div>
@@ -51,30 +85,34 @@
   </div>
   <table id="data-table">
     <thead>
-    <tr>
-      <th>Вибрати</th>
-      <th>Номер кімнати</th>
-      <th>Кількість кімнат</th>
-      <th>Площа номеру</th>
-      <th>Кількість місць в номері</th>
-      <th>Тип номеру</th>
-      <th>Ціна кімнати</th>
-      <th>Опис номеру</th>
-    </tr>
+      <tr>
+        <th>Вибрати</th>
+        <th>Номер кімнати</th>
+        <th>Кількість кімнат</th>
+        <th>Площа номеру</th>
+        <th>Кількість місць в номері</th>
+        <th>Тип номеру</th>
+        <th>Ціна кімнати</th>
+        <th>Опис номеру</th>
+      </tr>
     </thead>
     <tbody>
-    <tr v-for="room in rooms" :key="room.roomNumber">
-      <td>
-        <input type="checkbox" v-model="selectedRooms" :value="room.roomNumber"/>
-      </td>
-      <td>{{ room.roomNumber }}</td>
-      <td>{{ room.numberOfRooms }}</td>
-      <td>{{ room.roomArea }} м^3</td>
-      <td>{{ room.placesInRoom }}</td>
-      <td>{{ room.roomType }}</td>
-      <td>{{ room.roomCost }}</td>
-      <td>{{ room.description }}</td>
-    </tr>
+      <tr v-for="room in rooms" :key="room.roomNumber">
+        <td>
+          <input
+            type="checkbox"
+            v-model="selectedRooms"
+            :value="room.roomNumber"
+          />
+        </td>
+        <td>{{ room.roomNumber }}</td>
+        <td>{{ room.numberOfRooms }}</td>
+        <td>{{ room.roomArea }} м^3</td>
+        <td>{{ room.placesInRoom }}</td>
+        <td>{{ room.roomType }}</td>
+        <td>{{ room.roomCost }}</td>
+        <td>{{ room.description }}</td>
+      </tr>
     </tbody>
   </table>
 </template>
@@ -87,8 +125,8 @@ import {
   validateRoomNumber,
   validateRoomType,
   validatePlacesInRoom,
-  validateNumberOfRooms
-} from "@/pages/validation/allValidation";
+  validateNumberOfRooms,
+} from '@/pages/validation/allValidation';
 
 export default {
   data() {
@@ -105,8 +143,8 @@ export default {
       isAdmin: false,
       role: '',
       isUpdate: false,
-      selectedRooms: []
-    }
+      selectedRooms: [],
+    };
   },
   methods: {
     async submitForm() {
@@ -120,9 +158,15 @@ export default {
       delete this.errors[errorID];
     },
     async addInformation() {
-      if (!this.validateRoomNumber() || !this.validateNumberOfRooms() || !this.validateRoomArea()
-          || !this.validatePlacesInRoom() || !this.validateRoomType() || !this.validateRoomCost()
-          || !this.validateDescription()) {
+      if (
+        !this.validateRoomNumber() ||
+        !this.validateNumberOfRooms() ||
+        !this.validateRoomArea() ||
+        !this.validatePlacesInRoom() ||
+        !this.validateRoomType() ||
+        !this.validateRoomCost() ||
+        !this.validateDescription()
+      ) {
         return;
       }
       try {
@@ -138,7 +182,7 @@ export default {
             placesInRoom: this.placesInRoom,
             description: this.description,
             roomType: this.roomType,
-            roomCost: this.roomCost
+            roomCost: this.roomCost,
           }),
         });
         await this.fetchData();
@@ -168,11 +212,13 @@ export default {
     async fetchUserRole() {
       const username = localStorage.getItem('username');
       try {
-        const response = await fetch(`http://localhost:3000/getUserRole?username=${username}`);
+        const response = await fetch(
+          `http://localhost:3000/getUserRole?username=${username}`
+        );
         if (response.ok) {
           const data = await response.json();
           this.role = data[0].role;
-          this.isAdmin = this.role === "ADMIN";
+          this.isAdmin = this.role === 'ADMIN';
         } else {
           console.error('Server response not OK');
         }
@@ -182,7 +228,9 @@ export default {
     },
     async checkRoomNumber() {
       try {
-        const response = await fetch(`http://localhost:3000/checkRoomNumber?roomNumber=${this.roomNumber}`);
+        const response = await fetch(
+          `http://localhost:3000/checkRoomNumber?roomNumber=${this.roomNumber}`
+        );
         if (response.ok) {
           const result = await response.json();
           this.isUpdate = result.exists;
@@ -194,9 +242,14 @@ export default {
       }
     },
     async updateInformation() {
-      if (!this.validateNumberOfRooms() || !this.validateRoomArea()
-          || !this.validatePlacesInRoom() || !this.validateRoomType() || !this.validateRoomCost()
-          || !this.validateDescription()) {
+      if (
+        !this.validateNumberOfRooms() ||
+        !this.validateRoomArea() ||
+        !this.validatePlacesInRoom() ||
+        !this.validateRoomType() ||
+        !this.validateRoomCost() ||
+        !this.validateDescription()
+      ) {
         return;
       }
       try {
@@ -212,7 +265,7 @@ export default {
             placesInRoom: this.placesInRoom,
             description: this.description,
             roomType: this.roomType,
-            roomCost: this.roomCost
+            roomCost: this.roomCost,
           }),
         });
         await this.fetchData();
@@ -231,7 +284,9 @@ export default {
       if (this.selectedRooms.length === 0) {
         return;
       }
-      const confirmed = window.confirm('Ви впевнені, що хочете видалити обрані кімнати?');
+      const confirmed = window.confirm(
+        'Ви впевнені, що хочете видалити обрані кімнати?'
+      );
       if (!confirmed) {
         return;
       }
@@ -294,8 +349,7 @@ export default {
       this.checkRoomNumber();
     },
   },
-}
+};
 </script>
 
-<style scoped src="./styles/RoomsStyle.css">
-</style>
+<style scoped src="./styles/RoomsStyle.css"></style>

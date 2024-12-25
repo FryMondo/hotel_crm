@@ -1,171 +1,178 @@
 .navbar {
-    margin: -8px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: black;
-    padding: 20px;
+  margin: -8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  padding: 20px;
 }
 
 .navbar button {
-    background-color: white;
-    padding: 8px 15px;
-    font-size: 20px;
-    border-radius: 15px;
+  background-color: white;
+  padding: 8px 15px;
+  font-size: 20px;
+  border-radius: 15px;
 }
 
 .navigation-btn {
-    width: 145px;
+  width: 145px;
 }
 
 .navigation-wrapper {
-    position: relative;
+  position: relative;
 }
 
 .navigation-menu {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .navigation-wrapper:hover .navigation-menu,
 .navigation-btn:hover + .navigation-menu {
-    display: block;
+  display: block;
 }
 
 .navigation-menu button {
-    display: block;
-    width: 100%;
-    padding: 8px 15px;
-    font-size: 16px;
-    text-align: left;
-    border: none;
-    background-color: white;
+  display: block;
+  width: 100%;
+  padding: 8px 15px;
+  font-size: 16px;
+  text-align: left;
+  border: none;
+  background-color: white;
 }
 
 .welcome-text {
-    position: absolute;
-    top: 12%;
-    left: 32%;
-    text-align: center;
-    font-size: 48px;
+  position: absolute;
+  top: 12%;
+  left: 32%;
+  text-align: center;
+  font-size: 48px;
 }
 
 .welcome-line {
-    margin-top: 312px;
-    width: 100%;
-    border-top: 1px solid black;
+  margin-top: 312px;
+  width: 100%;
+  border-top: 1px solid black;
 }
 
 .hotel_info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 
 .info-title {
-    text-align: center;
-    font-size: 48px;
-    margin-bottom: 20px;
+  text-align: center;
+  font-size: 48px;
+  margin-bottom: 20px;
 }
 
 .info-content {
-    display: flex;
-    width: 70%;
+  display: flex;
+  width: 70%;
 }
 
 .image-container {
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    padding-right: 20px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  padding-right: 20px;
 }
 
 .hotel-image {
-    height: 440px;
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 10px;
+  height: 440px;
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 10px;
 }
 
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 0.5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 
-.fade-enter, .fade-leave-to {
-    opacity: 0;
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .text-container {
-    width: 50%;
-    font-size: 26px;
-    padding: 25px;
+  width: 50%;
+  font-size: 26px;
+  padding: 25px;
 }
 
 .text-container li {
-    font-size: 26px;
-    padding: 10px;
+  font-size: 26px;
+  padding: 10px;
 }
 
 .info-line {
-    margin-top: 150px;
-    width: 100%;
-    border-top: 1px solid black;
+  margin-top: 150px;
+  width: 100%;
+  border-top: 1px solid black;
 }
 
 .address {
-    text-align: center;
-    font-size: 26px;
-    margin-bottom: 20px;
+  text-align: center;
+  font-size: 26px;
+  margin-bottom: 20px;
 }
 
 .map {
-    text-align: center;
-    margin-top: 20px;
+  text-align: center;
+  margin-top: 20px;
 }
 
 iframe {
-    width: 720px;
-    height: 540px;
-    border: 0;
+  width: 720px;
+  height: 540px;
+  border: 0;
 }
 
 .footer {
-    background-color: black;
-    color: white;
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-    margin: 50px -8px -8px;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 20px;
+  margin: 50px -8px -8px;
 }
 
-.contacts, .groups {
-    text-align: center;
+.contacts,
+.groups {
+  text-align: center;
 }
 
-.contacts p, .groups p {
-    margin: 0;
-    font-size: 22px;
+.contacts p,
+.groups p {
+  margin: 0;
+  font-size: 22px;
 }
 
-.contacts strong, .groups strong {
-    font-size: 25px;
+.contacts strong,
+.groups strong {
+  font-size: 25px;
 }
 
-.contacts a, .groups a {
-    color: white;
-    text-decoration: none;
+.contacts a,
+.groups a {
+  color: white;
+  text-decoration: none;
 }
 
 .groups img {
-    width: 32px;
-    height: 32px;
+  width: 32px;
+  height: 32px;
 }
 
-.contacts a:hover, .groups a:hover {
-    text-decoration: underline;
+.contacts a:hover,
+.groups a:hover {
+  text-decoration: underline;
 }

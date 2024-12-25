@@ -8,7 +8,7 @@ const port = 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const post_login = require('./serverParts/Post_login');
 const post_registration = require('./serverParts/Post_registration');
@@ -34,18 +34,18 @@ const delete_user = require('./serverParts/Delete_user');
 const delete_room = require('./serverParts/Delete_rooms');
 
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'password',
-    database: 'hotel_crm'
+  host: 'localhost',
+  user: 'root',
+  password: 'password',
+  database: 'hotel_crm',
 });
 
 db.connect((err) => {
-    if (err) {
-        console.log('Error connecting to the database:', err);
-        return;
-    }
-    console.log('Connected to MySQL database');
+  if (err) {
+    console.log('Error connecting to the database:', err);
+    return;
+  }
+  console.log('Connected to MySQL database');
 });
 
 app.post('/register', post_registration);
@@ -87,5 +87,5 @@ app.post('/deleteUsers', delete_user);
 app.post('/deleteRooms', delete_room);
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
