@@ -1,44 +1,34 @@
-# hotel_crm
-# **Page of hotel**
-***
-# Project setup
-## If you haven`t installed Vue.js install it running this command
-```
-npm install -g @vue/cli
-```
-## If you installed Vue.js, or you already have it, move to another steps
-***
-## Step 1: installing project
-### Clone a repository
-```
-git clone https://github.com/FryMondo/hotel_crm.git
-```
-***
-# Running an application
-## Step 1: run server
-### Move to directory "server"
-```
-cd src/server 
-```
-### Now run server
-```
-node server.js
-```
-***
-## Step 2: run application
-```
-npm run serve
-```
-***
-## Configuring a Database
-### Step 1: Go to the "server.js" file and configure the settings for your database (lines 14-19)
-```
-const db = mysql.createConnection({
-    host: 'localhost', (input your host)
-    user: 'root', (input your user)
-    password: 'password', (input your password)
-    database: 'hotel_crm' (name of your database)
-});
-```
-***
-# Done :)
+# CRM для готелів з управлінням бронюваннями
+Система онлайн бронювання готелю розроблена для зручного електронного бронювання готелів. Вона надає можливість ефективно систематизувати дані про номери та їх стан, а також забезпечує доступ до редагування даних про бронювання.
+
+--- 
+
+# Технологічний стек
+
+### Frontend: Vue.js
+
+### Backend: Node.js
+
+### Database: MySQL
+
+---
+
+# Функціональні можливості
+
+## Авторизація та аутентифікація користувачів
+
+#### • Є 2 ролі: адміністратор і звичайний користувач
+
+#### • Усі користувачі повинні мати можливість зареєструватися та ввійти
+
+## Управління бронюванням
+
+#### • Усі користувачі можуть забронювати номер в готелі
+
+#### • Усі користувачі можуть редагувати запис
+
+## Управління кімнатами
+
+#### • Усі користувачі можуть подивитися інформацію про кімнати
+
+#### • Адміністратор може додавати нові кімнати; видаляти наявні кімнати; редагувати інформацію про кімнату
